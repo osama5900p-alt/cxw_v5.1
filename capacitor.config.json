@@ -1,0 +1,6 @@
+{
+  "appId": "app.cxw.vault",
+  "appName": "CXW",
+  "webDir": "www",
+  "android": { "allowMixedContent": false }
+}

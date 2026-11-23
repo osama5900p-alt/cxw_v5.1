@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light" data-lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src blob: data:; media-src blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F5F7FA">
+<meta name="referrer" content="no-referrer">
+<title>cxw — الحاوية الصامتة</title>
+<style>
+:root{--bg:#F5F7FA;--surface:#FFFFFF;--surface-2:#EDF1F5;--border:#DCE3EA;--text:#1A2129;--text-2:#5A6672;--accent:#2AB3A6;--accent-2:#1A7F76;--accent-glow:rgba(42,179,166,0.28);--success:#10B981;--success-2:#059669;--danger:#DC2626;--warn:#D97706;--radius:16px;--radius-sm:10px;--radius-xs:8px;--header-bg:rgba(245,247,250,0.88);--shadow:rgba(0,0,0,0.10);--glass-bg:rgba(255,255,255,0.78);--overlay:rgba(8,10,12,0.94);}
+[data-theme="dark"]{--bg:#0F1419;--surface:#1A2129;--surface-2:#232C36;--border:#2D3742;--text:#E8EEF2;--text-2:#7B8A96;--accent:#4FD1C5;--accent-2:#2AB3A6;--accent-glow:rgba(79,209,197,0.28);--success:#34D399;--success-2:#10B981;--danger:#F87171;--warn:#FBBF24;--header-bg:rgba(15,20,25,0.88);--shadow:rgba(0,0,0,0.6);--glass-bg:rgba(26,33,41,0.78);--overlay:rgba(5,7,9,0.96);}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{overflow-x:hidden;}
+body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter','IBM Plex Sans Arabic',system-ui,-apple-system,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;transition:background 0.3s,color 0.3s;}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--header-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:50;}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;}
+.logo-mark{width:26px;height:26px;border:2px solid var(--accent);border-radius:8px;position:relative;flex-shrink:0;}
+.logo-mark::before{content:'';position:absolute;width:2px;height:13px;background:var(--accent);top:50%;left:50%;transform:translate(-50%,-50%) rotate(20deg);box-shadow:0 0 10px var(--accent);}
+.logo-text{color:var(--accent);}
+.logo-text span{color:var(--text-2);}
+.header-actions{display:flex;align-items:center;gap:6px;}
+.ver-badge{font-size:10px;color:var(--text-2);font-family:'JetBrains Mono',monospace;padding:4px 10px;border:1px solid var(--border);border-radius:20px;background:var(--surface);}
+.icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.25s,transform 0.2s;padding:0;font-family:inherit;position:relative;overflow:hidden;}
+.icon-btn:active{transform:scale(0.94);}
+.icon-btn svg{width:18px;height:18px;position:absolute;top:50%;left:50%;margin:-9px 0 0 -9px;transition:transform 0.5s cubic-bezier(.34,1.56,.64,1),opacity 0.35s ease;}
+.theme-toggle .icon-sun{opacity:0;transform:rotate(180deg) scale(0);}
+.theme-toggle .icon-moon{opacity:1;transform:rotate(0deg) scale(1);}
+[data-theme="dark"] .theme-toggle .icon-sun{opacity:1;transform:rotate(0deg) scale(1);}
+[data-theme="dark"] .theme-toggle .icon-moon{opacity:0;transform:rotate(180deg) scale(0);}
+.lang-btn .lang-label{font-size:11px;font-weight:700;letter-spacing:0.5px;font-family:'JetBrains Mono',monospace;}
+main{padding:20px 18px 120px;max-width:520px;margin:0 auto;position:relative;}
+.tabs-primary{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:6px;margin-bottom:18px;}
+.tab-primary{padding:12px 8px;text-align:center;font-size:14px;font-weight:600;color:var(--text-2);border-radius:12px;cursor:pointer;transition:all 0.25s;border:none;background:transparent;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;}
+.tab-primary.active{background:var(--surface-2);color:var(--accent);}
+.tabs-secondary{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;margin-bottom:22px;gap:4px;}
+.tab-secondary{flex:1;padding:10px 8px;text-align:center;font-size:12.5px;font-weight:600;color:var(--text-2);border-radius:var(--radius-xs);cursor:pointer;transition:all 0.25s;border:none;background:transparent;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;}
+.tab-secondary.active{background:var(--surface-2);color:var(--text);}
+.tab-secondary.active[data-role="encrypt"]{color:var(--accent);}
+.tab-secondary.active[data-role="decrypt"]{color:var(--warn);}
+.view-group{display:none;}
+.view-group.active{display:block;animation:fadeIn 0.3s ease;}
+.sub-view{display:none;}
+.sub-view.active{display:block;animation:subFade 0.25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+@keyframes subFade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+.hero{text-align:center;padding:14px 0 22px;}
+.hero h1{font-size:19px;margin:0 0 10px;font-weight:600;letter-spacing:0.2px;line-height:1.5;padding:0 8px;}
+.hero p{color:var(--text-2);font-size:12.5px;margin:0;line-height:1.7;padding:0 12px;}
+.hero .hero-messages{position:relative;min-height:40px;display:flex;align-items:center;justify-content:center;}
+.hero .hero-msg{position:absolute;left:12px;right:12px;text-align:center;font-size:12.5px;color:var(--text-2);line-height:1.6;opacity:0;transition:opacity 0.5s ease;}
+.hero .hero-msg.active{opacity:1;}
+.btn{width:100%;padding:15px;border:none;border-radius:var(--radius);font-size:14.5px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;margin-bottom:10px;}
+.btn:active{transform:scale(0.985);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;}
+.btn:disabled:active{transform:none;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#FFFFFF;box-shadow:0 8px 24px var(--accent-glow);}
+.btn-save{background:linear-gradient(135deg,var(--success),var(--success-2));color:#FFFFFF;box-shadow:0 8px 24px rgba(16,185,129,0.25);}
+.btn-watch{background:linear-gradient(135deg,#6366F1,#4F46E5);color:#FFFFFF;box-shadow:0 8px 24px rgba(99,102,241,0.28);}
+.btn-folder{background:linear-gradient(135deg,#F59E0B,#D97706);color:#FFFFFF;box-shadow:0 8px 24px rgba(245,158,11,0.28);}
+.btn-ghost{background:transparent;color:var(--text-2);border:1px solid var(--border);font-size:13px;padding:12px;margin-top:6px;}
+.btn-sticky{position:sticky;bottom:14px;z-index:25;box-shadow:0 14px 34px rgba(0,0,0,0.16),0 8px 24px var(--accent-glow);}
+.card-title{font-size:11px;color:var(--text-2);margin-bottom:10px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
+.card-title .count-chip{font-size:10px;padding:2px 8px;background:var(--surface-2);border-radius:10px;color:var(--accent);font-family:'JetBrains Mono',monospace;letter-spacing:0;text-transform:none;}
+.progress-wrap{margin:14px 0 4px;}
+.progress-head{display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);font-family:'JetBrains Mono',monospace;margin-bottom:6px;}
+.progress{height:6px;background:var(--surface-2);border-radius:4px;overflow:hidden;}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 0.3s ease-out;border-radius:4px;box-shadow:0 0 12px var(--accent-glow);}
+.status{font-size:12.5px;color:var(--text-2);text-align:center;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:20px;}
+.status .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;flex-shrink:0;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.info-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-top:14px;}
+.info-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);padding:5px 0;font-family:'JetBrains Mono',monospace;}
+.info-row strong{color:var(--text);font-weight:500;}
+.storage-meter{margin-top:14px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);}
+.storage-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:10px;}
+.storage-head .label{color:var(--text-2);}
+.storage-head .value{color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;}
+.storage-head .value strong{color:var(--accent);}
+.storage-bar{height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden;}
+.storage-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 0.35s ease-out;border-radius:4px;box-shadow:0 0 12px var(--accent-glow);}
+.storage-fill.warn{background:linear-gradient(90deg,var(--warn),#F59E0B);}
+.storage-fill.danger{background:linear-gradient(90deg,var(--danger),#B91C1C);}
+.thumbs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;}
+.thumb-more-btn{width:100%;margin-top:10px;padding:11px;background:var(--surface-2);border:1px dashed var(--border);border-radius:var(--radius-sm);color:var(--accent);font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:0.2px;}
+.thumb-more-btn:active{transform:scale(0.98);}
+.thumb-more-btn:hover{border-color:var(--accent);}
+.thumb{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#111;animation:thumbIn 0.4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 4px 14px rgba(0,0,0,0.08);content-visibility:auto;contain-intrinsic-size:auto 120px;}
+@keyframes thumbIn{from{opacity:0;transform:scale(0.85) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.thumb img,.thumb video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.thumb video::-webkit-media-controls,.thumb video::-webkit-media-controls-start-playback-button,.thumb video::-webkit-media-controls-panel{display:none!important;opacity:0!important;pointer-events:none!important;}
+.thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,0.75) 100%);pointer-events:none;}
+.thumb .badge{position:absolute;top:6px;inset-inline-end:6px;z-index:2;min-width:22px;height:22px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#FFFFFF;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 6px;box-shadow:0 2px 6px rgba(0,0,0,0.25);font-family:'JetBrains Mono',monospace;border:1.5px solid rgba(255,255,255,0.9);}
+.thumb .del{position:absolute;top:6px;inset-inline-start:6px;z-index:2;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.95);border:1.5px solid rgba(220,38,38,0.3);color:#DC2626;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;line-height:1;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+.thumb .name{position:absolute;bottom:0;inset-inline:0;z-index:2;padding:20px 8px 6px;font-size:9.5px;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'JetBrains Mono',monospace;text-shadow:0 1px 3px rgba(0,0,0,0.8);}
+.thumb .type-tag{position:absolute;bottom:22px;inset-inline-start:6px;z-index:2;background:rgba(255,255,255,0.92);color:#1A2129;font-size:8.5px;padding:2px 6px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-weight:700;}
+[data-theme="dark"] .thumb .type-tag{background:rgba(15,20,25,0.92);color:#4FD1C5;}
+.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px;}
+.result-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;animation:thumbIn 0.4s cubic-bezier(.34,1.56,.64,1) backwards;box-shadow:0 3px 12px rgba(0,0,0,0.06);cursor:pointer;transition:transform 0.15s;content-visibility:auto;contain-intrinsic-size:auto 240px;}
+.result-item:active{transform:scale(0.97);}
+.result-item-media{position:relative;width:100%;height:160px;background:#111;overflow:hidden;}
+.result-item-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,0.6) 100%);pointer-events:none;}
+.result-item img,.result-item video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.result-item video::-webkit-media-controls,.result-item video::-webkit-media-controls-start-playback-button,.result-item video::-webkit-media-controls-panel{display:none!important;opacity:0!important;pointer-events:none!important;}
+.result-item-type{position:absolute;top:8px;inset-inline-start:8px;z-index:2;background:rgba(255,255,255,0.92);color:#1A2129;font-size:9px;padding:3px 8px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;}
+[data-theme="dark"] .result-item-type{background:rgba(15,20,25,0.92);color:#4FD1C5;}
+.result-item-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.92);color:#1A2129;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 4px 14px rgba(0,0,0,0.3);pointer-events:none;}
+.result-item-play::before{content:'';width:0;height:0;border-left:15px solid currentColor;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:5px;}
+.result-item-body{padding:10px 12px 12px;}
+.result-item-info{font-size:11px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px;}
+.result-item-size{font-size:9.5px;color:var(--text-2);font-family:'JetBrains Mono',monospace;opacity:0.75;margin-bottom:10px;}
+.result-item-actions button{width:100%;padding:9px;font-size:11.5px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#FFFFFF;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 10px var(--accent-glow);}
+.bundle-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;gap:10px;}
+.bundle-item.oversized{border-color:var(--warn);background:linear-gradient(135deg,rgba(217,119,6,0.05),rgba(245,158,11,0.02));}
+.bundle-info{flex:1;min-width:0;}
+.bundle-name{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bundle-meta{font-size:10px;color:var(--text-2);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+.bundle-meta .oversized-badge{color:var(--warn);font-weight:700;margin-inline-start:4px;}
+.bundle-save{padding:8px 16px;font-size:11.5px;background:linear-gradient(135deg,var(--success),var(--success-2));color:#FFFFFF;border:none;border-radius:9px;cursor:pointer;font-weight:700;font-family:inherit;flex-shrink:0;box-shadow:0 3px 10px rgba(16,185,129,0.2);}
+.bundle-save:active{transform:scale(0.96);}
+.bundle-save.saved{background:var(--surface-2);color:var(--success);box-shadow:none;}
+.delete-warning{background:linear-gradient(135deg,rgba(220,38,38,0.08),rgba(185,28,28,0.04));border:1.5px solid var(--danger);border-radius:var(--radius-sm);padding:14px;margin-top:16px;}
+.delete-warning-title{font-size:12px;font-weight:700;color:var(--danger);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.delete-warning-body{font-size:11.5px;color:var(--text);line-height:1.7;}
+.delete-warning-body ol{margin:6px 0 0;padding-inline-start:18px;}
+.delete-warning-body li{margin-bottom:4px;}
+input[type=file]{display:none;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:13px 22px;border-radius:12px;font-size:13px;z-index:200;transition:transform 0.35s cubic-bezier(.4,0,.2,1);box-shadow:0 16px 48px var(--shadow);max-width:calc(100% - 32px);text-align:center;backdrop-filter:blur(16px);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.file-badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface-2);padding:8px 14px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent);margin:8px 0;word-break:break-all;max-width:100%;}
+.pwd-field{margin-bottom:12px;}
+.pwd-label{font-size:11.5px;color:var(--text-2);font-weight:600;margin-bottom:6px;display:block;}
+.pwd-input{width:100%;padding:13px 16px;font-size:14px;font-family:'JetBrains Mono',monospace;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:all 0.2s;direction:ltr;text-align:left;}
+.pwd-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+.pwd-hint{font-size:10.5px;color:var(--text-2);margin-top:5px;font-family:'JetBrains Mono',monospace;}
+.pwd-card{background:linear-gradient(135deg,rgba(42,179,166,0.08),rgba(26,127,118,0.04));border:1px solid var(--accent);border-radius:var(--radius-sm);padding:16px;margin-top:14px;}
+[data-theme="dark"] .pwd-card{background:linear-gradient(135deg,rgba(79,209,197,0.08),rgba(42,179,166,0.04));}
+.pwd-card-title{font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.pwd-display{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 14px;margin-bottom:10px;}
+.pwd-value{flex:1;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);font-weight:600;word-break:break-all;direction:ltr;text-align:left;}
+.copy-btn{padding:6px 12px;font-size:11px;background:var(--accent);color:#FFFFFF;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-family:inherit;flex-shrink:0;}
+.pwd-warn{font-size:11px;color:var(--warn);line-height:1.5;}
+.pull-indicator{position:fixed;left:50%;bottom:-90px;transform:translateX(-50%);width:68px;height:68px;z-index:150;opacity:0;pointer-events:none;transition:opacity 0.35s ease,bottom 0.35s cubic-bezier(.34,1.56,.64,1);will-change:bottom,opacity;}
+.pull-ring{width:100%;height:100%;position:relative;border-radius:50%;background:var(--glass-bg);backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);box-shadow:0 4px 20px rgba(0,0,0,0.08),inset 0 1px 0 rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;border:1px solid var(--border);transition:background 0.5s ease,box-shadow 0.5s ease,border-color 0.5s ease;}
+[data-theme="dark"] .pull-ring{box-shadow:0 4px 20px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.05);}
+.pull-ring svg.ring-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none;transition:opacity 0.4s ease;}
+.pull-ring .ring-track{fill:none;stroke:var(--accent);stroke-opacity:0.12;stroke-width:3;transition:opacity 0.4s ease;}
+.pull-ring .ring-progress{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:188.5;stroke-dashoffset:188.5;filter:drop-shadow(0 0 4px var(--accent-glow));transition:opacity 0.4s ease;}
+.pull-ring .cxw-logo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.7);font-weight:800;font-size:14px;letter-spacing:-0.5px;color:var(--accent);opacity:0;transition:opacity 0.35s ease,transform 0.35s ease,color 0.4s ease;font-family:'Inter',system-ui,sans-serif;pointer-events:none;}
+.pull-ring .cxw-logo span{color:var(--text-2);transition:color 0.4s ease;}
+.pull-indicator.pulling .cxw-logo{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.pull-indicator.ready .cxw-logo{opacity:0;transform:translate(-50%,-50%) scale(0.3);}
+.pull-ring .trash-icon{position:absolute;top:50%;left:50%;width:30px;height:30px;transform:translate(-50%,-50%) scale(0.5);color:#FFFFFF;opacity:0;transition:opacity 0.5s ease,transform 0.5s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+.pull-indicator.ready .trash-icon{transform:translate(-50%,-50%) scale(1);opacity:1;}
+.pull-indicator.ready{pointer-events:auto;cursor:pointer;}
+.pull-indicator.ready .pull-ring{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent;box-shadow:0 8px 32px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,0.3);}
+.pull-indicator.ready .pull-ring svg.ring-svg{opacity:0;}
+.clean-toast{position:fixed;left:50%;bottom:50%;transform:translateX(-50%) translateY(20px) scale(0.9);background:linear-gradient(135deg,rgba(42,179,166,0.95),rgba(26,127,118,0.95));color:#FFFFFF;padding:14px 26px;border-radius:14px;font-size:14px;font-weight:600;z-index:300;opacity:0;pointer-events:none;box-shadow:0 20px 60px rgba(42,179,166,0.35),inset 0 1px 0 rgba(255,255,255,0.25);backdrop-filter:blur(20px);transition:opacity 0.3s,transform 0.3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px;}
+.clean-toast.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1);}
+.clean-toast .check{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+.viewer{position:fixed;inset:0;z-index:400;background:var(--overlay);display:none;flex-direction:column;opacity:0;transition:opacity 0.35s ease;overflow:hidden;}
+.viewer.show{display:flex;opacity:1;}
+.viewer-stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.viewer-track{display:flex;height:100%;width:100%;transition:transform 0.45s cubic-bezier(.34,1.4,.64,1);will-change:transform;}
+.viewer-slide{flex:0 0 100%;height:100%;display:flex;align-items:center;justify-content:center;padding:60px 16px 80px;}
+.viewer-media{max-width:100%;max-height:100%;border-radius:14px;box-shadow:0 24px 80px rgba(0,0,0,0.7);display:block;background:#000;user-select:none;-webkit-user-drag:none;}
+.viewer-top{position:absolute;top:0;left:0;right:0;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg,rgba(0,0,0,0.6) 0%,transparent 100%);z-index:10;transition:opacity 0.35s ease,transform 0.35s ease;}
+.viewer-top.hidden{opacity:0;transform:translateY(-10px);pointer-events:none;}
+.viewer-name{flex:1;min-width:0;color:#FFFFFF;font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 4px rgba(0,0,0,0.6);}
+.viewer-counter{color:#FFFFFF;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.14);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.2);padding:5px 11px;border-radius:20px;flex-shrink:0;}
+.viewer-close{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.14);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.2);color:#FFFFFF;font-size:20px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1;font-family:inherit;}
+.viewer-close:active{transform:scale(0.92);background:rgba(255,255,255,0.25);}
+.viewer-bottom{position:absolute;bottom:0;left:0;right:0;padding:20px 20px 26px;display:flex;flex-direction:column;align-items:center;gap:14px;background:linear-gradient(0deg,rgba(0,0,0,0.7) 0%,transparent 100%);z-index:10;transition:opacity 0.35s ease,transform 0.35s ease;}
+.viewer-bottom.hidden{opacity:0;transform:translateY(10px);pointer-events:none;}
+.viewer-dots{display:flex;gap:6px;align-items:center;justify-content:center;max-width:100%;flex-wrap:nowrap;overflow:hidden;padding:4px 0;}
+.viewer-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.35);transition:all 0.3s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;cursor:pointer;}
+.viewer-dot.active{background:#FFFFFF;width:20px;border-radius:3px;box-shadow:0 0 8px rgba(255,255,255,0.6);}
+.viewer-meta{display:flex;align-items:center;gap:14px;color:#FFFFFF;font-size:11px;font-family:'JetBrains Mono',monospace;opacity:0.75;}
+.viewer-actions{display:flex;gap:10px;}
+.viewer-btn{padding:10px 22px;font-size:13px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#FFFFFF;border:none;border-radius:11px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px var(--accent-glow);}
+.viewer-btn:active{transform:scale(0.96);}
+.viewer-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,0.5);font-size:11px;font-family:'JetBrains Mono',monospace;pointer-events:none;opacity:0;transition:opacity 0.4s ease;text-align:center;padding:8px 16px;background:rgba(0,0,0,0.4);border-radius:20px;}
+.viewer-hint.show{opacity:1;}
+.gallery-toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.gallery-toolbar .btn{flex:1;min-width:120px;margin-bottom:0;font-size:13px;padding:12px;}
+.confirm-overlay{position:fixed;inset:0;z-index:500;background:rgba(8,10,12,0.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.25s;}
+.confirm-overlay.show{opacity:1;}
+.confirm-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px;max-width:400px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.5);transform:scale(0.9);transition:transform 0.25s cubic-bezier(.34,1.56,.64,1);}
+.confirm-overlay.show .confirm-box{transform:scale(1);}
+.confirm-title{font-size:16px;font-weight:700;margin-bottom:10px;color:var(--text);}
+.confirm-msg{font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:18px;word-break:break-word;}
+.confirm-actions{display:flex;gap:10px;}
+.confirm-actions button{flex:1;padding:13px;border:none;border-radius:11px;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;transition:all 0.15s;}
+.confirm-actions button:active{transform:scale(0.96);}
+.confirm-yes{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#FFFFFF;box-shadow:0 6px 18px var(--accent-glow);}
+.confirm-no{background:var(--surface-2);color:var(--text-2);border:1px solid var(--border);}
+@media (max-width:400px){main{padding:20px 14px 120px;}.hero h1{font-size:17px;}.pull-indicator{width:60px;height:60px;}.pull-ring .trash-icon{width:26px;height:26px;}.result-item-media{height:130px;}.viewer-slide{padding:50px 10px 70px;}.gallery-toolbar .btn{min-width:100%;}}
+/* ───── v5 additions ───── */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.btn:focus-visible,.tab-primary:focus-visible,.tab-secondary:focus-visible{outline-offset:-2px;}
+.drop-hint{display:none;text-align:center;font-size:11.5px;color:var(--text-2);margin:-2px 0 12px;}
+@media (hover:hover) and (pointer:fine){.drop-hint{display:block;}}
+.btn-link{background:transparent;border:none;color:var(--accent);font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;padding:6px 8px;display:block;margin:-4px auto 8px;}
+.btn-cancel{background:transparent;color:var(--danger);border:1px solid var(--danger);display:none;margin-top:12px;}
+.opts{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 14px;margin-top:14px;}
+.opt-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12.5px;padding:9px 0;cursor:pointer;color:var(--text);}
+.opt-row+.opt-row{border-top:1px solid var(--border);}
+.opt-label{flex:1;line-height:1.5;}
+.opt-select{background:var(--surface-2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'JetBrains Mono',inherit;font-size:12px;cursor:pointer;max-width:48%;}
+.opt-check input{position:absolute;opacity:0;width:0;height:0;}
+.opt-box{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;order:2;color:#fff;font-size:13px;font-weight:700;}
+.opt-check input:checked+.opt-box{background:var(--accent);border-color:var(--accent);}
+.opt-check input:checked+.opt-box::after{content:'✓';}
+.opt-check input:focus-visible+.opt-box{outline:2px solid var(--accent);outline-offset:2px;}
+.opt-check input:disabled+.opt-box,.opt-select:disabled{opacity:.5;cursor:not-allowed;}
+.pwd-wrap{position:relative;}
+.pwd-wrap .pwd-input{padding-right:62px;}
+.pwd-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--accent);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;padding:8px;}
+.pwd-meter{display:flex;gap:4px;margin-top:8px;}
+.pwd-meter i{flex:1;height:4px;border-radius:2px;background:var(--surface-2);transition:background .25s;}
+.pwd-meter[data-lvl="1"] i:nth-child(-n+1){background:var(--danger);}
+.pwd-meter[data-lvl="2"] i:nth-child(-n+2){background:var(--warn);}
+.pwd-meter[data-lvl="3"] i:nth-child(-n+3){background:var(--accent);}
+.pwd-meter[data-lvl="4"] i{background:var(--success);}
+.pwd-strength-label{font-size:10.5px;color:var(--text-2);margin-top:4px;min-height:14px;}
+.btn-small{padding:11px;font-size:12.5px;}
+.pwd-input:disabled{opacity:.6;}
+.file-tile{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--surface-2),var(--surface));color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;letter-spacing:1px;}
+.file-tile.big{width:120px;height:120px;border-radius:24px;font-size:24px;border:1px solid var(--border);}
+.viewer-file{display:flex;flex-direction:column;align-items:center;gap:14px;color:#fff;text-align:center;max-width:90%;}
+.vf-name{font-family:'JetBrains Mono',monospace;font-size:13px;word-break:break-all;}
+.vf-hint{font-size:11.5px;opacity:.6;}
+.delete-warning.ok{border-color:var(--success);background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(5,150,105,.04));}
+.delete-warning.ok .delete-warning-title{color:var(--success);}
+.bundle-meta .ok-badge{color:var(--success);font-weight:700;margin-inline-start:6px;}
+.drop-overlay{position:fixed;inset:0;z-index:450;background:rgba(42,179,166,.16);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;pointer-events:none;}
+.drop-overlay.show{display:flex;}
+.drop-box{border:2px dashed var(--accent);border-radius:24px;padding:36px 48px;font-size:16px;font-weight:700;color:var(--accent);background:var(--surface);}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.tabs-primary,.tabs-secondary{position:relative;}
+@media (min-width:700px){main{max-width:600px;}.result-grid{grid-template-columns:repeat(3,1fr);}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}}
+.storage-head .value,.viewer-counter,.viewer-meta,.result-item-size,.progress-head span:last-child,.file-badge,.count-chip,.thumb .name,.ver-badge{direction:ltr;unicode-bidi:isolate;}
+.bundle-meta bdi{unicode-bidi:isolate;}
+/* ───── v5.1 ───── */
+.viewer-slide{position:relative;}
+.viewer-stage{touch-action:none;}
+.vspin{position:absolute;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:vspin .8s linear infinite;pointer-events:none;display:none;z-index:5;}
+.vspin.on{display:block;}
+@keyframes vspin{to{transform:rotate(360deg);}}
+.vposter{position:relative;display:flex;align-items:center;justify-content:center;max-width:100%;max-height:100%;}
+.vplay{position:absolute;top:50%;left:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:rgba(255,255,255,.9);pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.4);}
+.vplay::before{content:'';position:absolute;top:50%;left:50%;margin:-11px 0 0 -6px;border-left:20px solid #1A2129;border-top:11px solid transparent;border-bottom:11px solid transparent;}
+.gal-sentinel{height:2px;}
+.thumb .file-tile,.result-item-media .file-tile{position:absolute;inset:0;}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="logo-mark"></div><div class="logo-text">cx<span>w</span></div></div>
+  <div class="header-actions">
+    <button class="icon-btn lang-btn" id="langToggle" type="button" aria-label="Language"><span class="lang-label" id="langLabel">EN</span></button>
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <div class="ver-badge">v5.1.0</div>
+  </div>
+</header>
+<main>
+  <div class="tabs-primary" id="tabsPrimary" role="tablist">
+    <button class="tab-primary active" data-group="auto" type="button" role="tab" aria-selected="true" data-i18n="tab.auto">x</button>
+    <button class="tab-primary" data-group="manual" type="button" role="tab" aria-selected="false" data-i18n="tab.manual">x</button>
+  </div>
+  <div class="view-group active" id="group-auto">
+    <div class="tabs-secondary" role="tablist">
+      <button class="tab-secondary active" data-role="encrypt" data-sub="auto-enc" type="button" role="tab" aria-selected="true" data-i18n="tab.encrypt">x</button>
+      <button class="tab-secondary" data-role="decrypt" data-sub="auto-dec" type="button" role="tab" aria-selected="false" data-i18n="tab.decrypt">x</button>
+    </div>
+    <div class="sub-view active" id="auto-enc" role="tabpanel">
+  <div class="hero"><h1 data-i18n="auto.enc.title">x</h1><p data-i18n="auto.enc.desc">x</p></div>
+  <input type="file" id="inAutoEnc" accept="image/*,video/*" multiple>
+  <input type="file" id="inAutoEncAny" multiple>
+  <button class="btn btn-primary" id="btnPickAutoEnc" type="button" data-i18n="auto.pickFiles">x</button>
+  <button class="btn-link" id="btnPickAutoEncAny" type="button" data-i18n="pick.any">x</button>
+  <div class="drop-hint" data-i18n="drop.hint">x</div>
+  <div class="storage-meter" id="autoMeter" style="display:none;">
+    <div class="storage-head"><span class="label" data-i18n="auto.selected">x</span><span class="value"><strong id="autoCount">0</strong></span></div>
+    <div class="storage-head" style="margin-bottom:8px;"><span class="label" data-i18n="auto.sizeLabel">x</span><span class="value"><strong id="autoUsed">0 B</strong></span></div>
+    <div class="storage-bar"><div class="storage-fill" id="autoBar"></div></div>
+    <div class="thumbs-grid" id="autoThumbs"></div>
+  </div>
+  <div class="opts" id="autoOpts">
+  <label class="opt-row"><span class="opt-label" data-i18n="opt.bundleSize">x</span>
+    <select class="opt-select" id="autoBundleSize"><option value="52428800">50 MB</option><option value="104857600">100 MB</option><option value="209715200" selected>200 MB</option><option value="524288000">500 MB</option><option value="2147483648">2 GB</option><option value="0" data-i18n="opt.noLimit">x</option></select></label>
+  <label class="opt-row opt-check"><span class="opt-label" data-i18n="opt.verify">x</span><input type="checkbox" id="autoVerify" checked><span class="opt-box" aria-hidden="true"></span></label>
+</div>
+  
+  <button class="btn btn-primary btn-sticky" id="btnStartAutoEnc" style="display:none;margin-top:14px;" type="button" data-i18n="btn.startEncrypt">x</button>
+  <div id="autoEncResult" style="display:none;">
+    <div class="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-head"><span id="autoEncStage" data-i18n="prog.preparing">x</span><span id="autoEncPct">0%</span></div><div class="progress"><div class="progress-bar" id="autoEncBar"></div></div></div>
+<div class="status" aria-live="polite"><span class="dot"></span><span id="autoEncStatus" data-i18n="prog.working">x</span></div>
+    <button class="btn btn-cancel" id="btnCancelAutoEnc" type="button" data-i18n="btn.cancel">x</button>
+    <div id="autoBundleList" style="margin-top:16px;"></div>
+    
+    <button class="btn btn-folder" id="btnFolderAuto" style="margin-top:12px;display:none;" type="button" data-i18n="btn.saveFolder">x</button>
+    <button class="btn btn-save" id="btnSaveAllAuto" style="margin-top:6px;display:none;" type="button" data-i18n="btn.saveAllFiles">x</button>
+    <div class="delete-warning" id="autoDeleteWarning" style="display:none;">
+      <div class="delete-warning-title">⚠️ <span id="autoDeleteTitle" data-i18n="delete.title">x</span></div>
+      <div class="delete-warning-body"><div data-i18n="delete.intro">x</div><ol>
+  <li data-i18n="delete.step0">x</li><li data-i18n="delete.step1">x</li><li data-i18n="delete.step2">x</li><li data-i18n="delete.step3">x</li><li data-i18n="delete.step4">x</li></ol></div>
+    </div>
+    <button class="btn btn-ghost" id="btnResetAutoEnc" type="button" data-i18n="btn.reset">x</button>
+  </div>
+</div>
+    <div class="sub-view" id="auto-dec" role="tabpanel">
+  <div class="hero"><h1 data-i18n="auto.dec.title">x</h1><p data-i18n="auto.dec.desc">x</p></div>
+  <input type="file" id="inAutoDec" accept=".cxw,application/octet-stream" multiple>
+  <button class="btn btn-primary" id="btnPickAutoDec" type="button" data-i18n="btn.pickCxwMulti">x</button>
+  <div class="drop-hint" data-i18n="drop.hint">x</div>
+  <div class="file-badge" id="autoDecName" style="display:none;">—</div>
+  
+  <div id="autoDecProg" ><div class="progress-wrap" id="autoDecProgWrap" style="display:none;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-head"><span id="autoDecStage" data-i18n="prog.preparing">x</span><span id="autoDecPct">0%</span></div><div class="progress"><div class="progress-bar" id="autoDecBar"></div></div></div>
+<div class="status" aria-live="polite"><span class="dot"></span><span id="autoDecStatus" data-i18n="prog.working">x</span></div></div>
+  <button class="btn btn-primary" id="btnRestoreAuto" disabled style="margin-top:12px;" type="button" data-i18n="btn.restoreFiles">x</button>
+  <button class="btn btn-cancel" id="btnCancelAutoDec" type="button" data-i18n="btn.cancel">x</button>
+  <div id="autoDecGallery" style="display:none;">
+    <div class="card-title" style="margin-top:20px;"><span data-i18n="result.files">x</span><span class="count-chip" id="autoDecGalleryCount">0</span></div>
+    <div class="gallery-toolbar">
+      <button class="btn btn-watch" id="btnWatchAllAuto" type="button" data-i18n="btn.watchAll">x</button>
+      <button class="btn btn-save" id="btnSaveAllRestoredAuto" type="button" data-i18n="btn.saveAll">x</button>
+    </div>
+    <div class="result-grid" id="autoDecGrid"></div>
+    <div class="gal-sentinel" id="autoDecSentinel" data-mode="auto"></div>
+  </div>
+  <button class="btn btn-ghost" id="btnResetAutoDec" type="button" data-i18n="btn.reset">x</button>
+</div>
+  </div>
+  <div class="view-group" id="group-manual">
+    <div class="tabs-secondary" role="tablist">
+      <button class="tab-secondary active" data-role="encrypt" data-sub="man-enc" type="button" role="tab" aria-selected="true" data-i18n="tab.encrypt">x</button>
+      <button class="tab-secondary" data-role="decrypt" data-sub="man-dec" type="button" role="tab" aria-selected="false" data-i18n="tab.decrypt">x</button>
+    </div>
+    <div class="sub-view active" id="man-enc" role="tabpanel">
+  <div class="hero"><h1 data-i18n="manual.title">x</h1>
+        <div class="hero-messages" id="guideMessages" aria-live="off">
+          <div class="hero-msg active" data-i18n="manual.msg1">x</div><div class="hero-msg" data-i18n="manual.msg2">x</div><div class="hero-msg" data-i18n="manual.msg3">x</div>
+        </div></div>
+  <input type="file" id="inManEnc" accept="image/*,video/*" multiple>
+  <input type="file" id="inManEncAny" multiple>
+  <button class="btn btn-primary" id="btnPickManEnc" type="button" data-i18n="auto.pickFiles">x</button>
+  <button class="btn-link" id="btnPickManEncAny" type="button" data-i18n="pick.any">x</button>
+  <div class="drop-hint" data-i18n="drop.hint">x</div>
+  <div class="storage-meter" id="manMeter" style="display:none;">
+    <div class="storage-head"><span class="label" data-i18n="auto.selected">x</span><span class="value"><strong id="manCount">0</strong></span></div>
+    <div class="storage-head" style="margin-bottom:8px;"><span class="label" data-i18n="auto.sizeLabel">x</span><span class="value"><strong id="manUsed">0 B</strong></span></div>
+    <div class="storage-bar"><div class="storage-fill" id="manBar"></div></div>
+    <div class="thumbs-grid" id="manThumbs"></div>
+  </div>
+  <div class="opts" id="manOpts">
+  <label class="opt-row"><span class="opt-label" data-i18n="opt.bundleSize">x</span>
+    <select class="opt-select" id="manBundleSize"><option value="52428800">50 MB</option><option value="104857600">100 MB</option><option value="209715200" selected>200 MB</option><option value="524288000">500 MB</option><option value="2147483648">2 GB</option><option value="0" data-i18n="opt.noLimit">x</option></select></label>
+  <label class="opt-row opt-check"><span class="opt-label" data-i18n="opt.verify">x</span><input type="checkbox" id="manVerify" checked><span class="opt-box" aria-hidden="true"></span></label>
+</div>
+  <div class="pwd-field" style="margin-top:14px;"><label class="pwd-label" for="manPassword" data-i18n="manual.password">x</label>
+  <div class="pwd-wrap"><input type="password" class="pwd-input" id="manPassword" autocomplete="new-password" spellcheck="false" maxlength="36"><button class="pwd-eye" id="btnEyeEnc" type="button" data-i18n="manual.show">x</button></div>
+  <div class="pwd-meter" id="manStrength" data-lvl="0"><i></i><i></i><i></i><i></i></div><div class="pwd-strength-label" id="manStrengthLabel" aria-live="polite"></div>
+  <div class="pwd-hint" data-i18n="manual.passwordHint">x</div></div>
+<div class="pwd-field"><label class="pwd-label" for="manPasswordConfirm" data-i18n="manual.confirmPassword">x</label><input type="password" class="pwd-input" id="manPasswordConfirm" autocomplete="new-password" spellcheck="false" maxlength="36"></div>
+
+  <button class="btn btn-primary btn-sticky" id="btnStartManEnc" style="display:none;margin-top:14px;" type="button" data-i18n="manual.startEncrypt">x</button>
+  <div id="manEncResult" style="display:none;">
+    <div class="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-head"><span id="manEncStage" data-i18n="prog.preparing">x</span><span id="manEncPct">0%</span></div><div class="progress"><div class="progress-bar" id="manEncBar"></div></div></div>
+<div class="status" aria-live="polite"><span class="dot"></span><span id="manEncStatus" data-i18n="prog.working">x</span></div>
+    <button class="btn btn-cancel" id="btnCancelManEnc" type="button" data-i18n="btn.cancel">x</button>
+    <div id="manBundleList" style="margin-top:16px;"></div>
+    <div class="pwd-card" id="manPwdCard" style="display:none;"><div class="pwd-card-title" data-i18n="manual.yourPassword">x</div><div class="pwd-display"><span class="pwd-value" id="manPwdDisplay">—</span><button class="copy-btn" id="btnCopyPwd" type="button" data-i18n="manual.copyPassword">x</button></div><div class="pwd-warn" data-i18n="manual.copyHint">x</div></div>
+    <button class="btn btn-folder" id="btnFolderMan" style="margin-top:12px;display:none;" type="button" data-i18n="btn.saveFolder">x</button>
+    <button class="btn btn-save" id="btnSaveAllMan" style="margin-top:6px;display:none;" type="button" data-i18n="btn.saveAllFiles">x</button>
+    <div class="delete-warning" id="manDeleteWarning" style="display:none;">
+      <div class="delete-warning-title">⚠️ <span id="manDeleteTitle" data-i18n="delete.title">x</span></div>
+      <div class="delete-warning-body"><div data-i18n="delete.intro">x</div><ol>
+  <li data-i18n="delete.step0">x</li><li data-i18n="delete.step1">x</li><li data-i18n="delete.step2">x</li><li data-i18n="delete.step3">x</li><li data-i18n="delete.step4">x</li></ol></div>
+    </div>
+    <button class="btn btn-ghost" id="btnResetManEnc" type="button" data-i18n="btn.reset">x</button>
+  </div>
+</div>
+    <div class="sub-view" id="man-dec" role="tabpanel">
+  <div class="hero"><h1 data-i18n="manual.recoverTitle">x</h1><p data-i18n="manual.enterPassword">x</p></div>
+  <input type="file" id="inManDec" accept=".cxw,application/octet-stream" multiple>
+  <button class="btn btn-primary" id="btnPickManDec" type="button" data-i18n="btn.pickCxwMulti">x</button>
+  <div class="drop-hint" data-i18n="drop.hint">x</div>
+  <div class="file-badge" id="manDecName" style="display:none;">—</div>
+  <div class="pwd-field" style="margin-top:14px;"><label class="pwd-label" for="manDecPassword" data-i18n="manual.password">x</label><div class="pwd-wrap"><input type="password" class="pwd-input" id="manDecPassword" autocomplete="off" spellcheck="false" maxlength="36"><button class="pwd-eye" id="btnEyeDec" type="button" data-i18n="manual.show">x</button></div></div>
+  <div id="manDecProg" ><div class="progress-wrap" id="manDecProgWrap" style="display:none;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-head"><span id="manDecStage" data-i18n="prog.preparing">x</span><span id="manDecPct">0%</span></div><div class="progress"><div class="progress-bar" id="manDecBar"></div></div></div>
+<div class="status" aria-live="polite"><span class="dot"></span><span id="manDecStatus" data-i18n="prog.working">x</span></div></div>
+  <button class="btn btn-primary" id="btnRestoreMan" disabled style="margin-top:12px;" type="button" data-i18n="manual.recover">x</button>
+  <button class="btn btn-cancel" id="btnCancelManDec" type="button" data-i18n="btn.cancel">x</button>
+  <div id="manDecGallery" style="display:none;">
+    <div class="card-title" style="margin-top:20px;"><span data-i18n="result.files">x</span><span class="count-chip" id="manDecGalleryCount">0</span></div>
+    <div class="gallery-toolbar">
+      <button class="btn btn-watch" id="btnWatchAllMan" type="button" data-i18n="btn.watchAll">x</button>
+      <button class="btn btn-save" id="btnSaveAllRestoredMan" type="button" data-i18n="btn.saveAll">x</button>
+    </div>
+    <div class="result-grid" id="manDecGrid"></div>
+    <div class="gal-sentinel" id="manDecSentinel" data-mode="manual"></div>
+  </div>
+  <button class="btn btn-ghost" id="btnResetManDec" type="button" data-i18n="btn.reset">x</button>
+</div>
+  </div>
+</main>
+<div class="pull-indicator" id="pullIndicator"><div class="pull-ring">
+  <svg class="ring-svg" viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg"><circle class="ring-track" cx="34" cy="34" r="30"/><circle class="ring-progress" id="ringProgress" cx="34" cy="34" r="30"/></svg>
+  <div class="cxw-logo">cx<span>w</span></div>
+  <svg class="trash-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+</div></div>
+<div class="clean-toast" id="cleanToast"><span class="check">✓</span><span id="cleanToastText" data-i18n="toast.cleaned">x</span></div>
+<div class="drop-overlay" id="dropOverlay"><div class="drop-box" data-i18n="drop.overlay">x</div></div>
+<div class="viewer" id="viewer" role="dialog" aria-modal="true">
+  <div class="viewer-top" id="viewerTop"><div class="viewer-close" id="viewerClose" role="button" tabindex="0" aria-label="Close">✕</div><div class="viewer-name" id="viewerName">—</div><div class="viewer-counter" id="viewerCounter">1 / 1</div></div>
+  <div class="viewer-stage" id="viewerStage"><div class="viewer-track" id="viewerTrack"></div><div class="viewer-hint" id="viewerHint"></div></div>
+  <div class="viewer-bottom" id="viewerBottom"><div class="viewer-dots" id="viewerDots"></div><div class="viewer-meta"><span id="viewerSize">—</span></div><div class="viewer-actions"><button class="viewer-btn" id="viewerDownload" type="button" data-i18n="btn.download">x</button></div></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+/* ═══════════════ CXW core v5 — streaming chunked AES-GCM ═══════════════
+   File layout (CXW5):
+   [34-byte header: magic, ver, flags, pbkdf2 iterations, salt16, chunkSize, noncePrefix4]
+   [chunk 0][chunk 1]…  each = AES-GCM(plain ≤ chunkSize) + 16-byte tag
+   IV = noncePrefix(4) | 0(4) | counter(4);  AAD = header | finalFlag
+   Plain stream = u32 indexLen | index JSON | file0 | file1 | …
+   Legacy CXW3 files remain readable.                                     */
+const MAGIC5='CXW5', MAGIC3='CXW3';
+const FORMAT_V5=5, HEADER_LEN=34, CHUNK_SIZE=1<<20, TAG_LEN=16;
+const ITER_MANUAL=600000, ITER_AUTO=100000;
+const MAX_INDEX_BYTES=16*1024*1024, MAX_FILES_PER_BUNDLE=100000;
+const AUTO_SECRET='cxw::silent-vault::v5::app-key-material';
+const enc=new TextEncoder(), dec=new TextDecoder();
+
+class CxwError extends Error{constructor(code,detail){super(code);this.name='CxwError';this.code=code;this.detail=detail;}}
+const tick=(()=>{const mc=new MessageChannel(),q=[];mc.port1.onmessage=()=>{const f=q.shift();if(f)f();};return()=>new Promise(r=>{q.push(r);mc.port2.postMessage(0);});})();
+function throwIfAborted(signal){if(signal&&signal.aborted)throw new CxwError('aborted');}
+
+/* ── sinks / sources ── */
+class BlobSink{
+  constructor(){this.parts=[];this.pending=0;this.size=0;}
+  push(u8){this.parts.push(u8);this.pending+=u8.length;this.size+=u8.length;
+    if(this.pending>=32*1048576){this.parts=[new Blob(this.parts)];this.pending=0;}}
+  finish(type){return new Blob(this.parts,{type:type||'application/octet-stream'});}
+}
+class MultiSource{
+  constructor(parts){this.parts=parts;this.pi=0;this.off=0;}
+  async read(n){
+    const out=new Uint8Array(n);let filled=0;
+    while(filled<n&&this.pi<this.parts.length){
+      const p=this.parts[this.pi];
+      const len=p instanceof Uint8Array?p.length:p.size;
+      if(this.off>=len){this.pi++;this.off=0;continue;}
+      const take=Math.min(n-filled,len-this.off);
+      const data=p instanceof Uint8Array?p.subarray(this.off,this.off+take):new Uint8Array(await p.slice(this.off,this.off+take).arrayBuffer());
+      if(data.length!==take)throw new CxwError('readFailed');
+      out.set(data,filled);filled+=take;this.off+=take;
+    }
+    return filled===n?out:out.subarray(0,filled);
+  }
+}
+
+/* ── keys & header ── */
+async function deriveKeyV5(manual,password,salt,iter){
+  const secret=manual?String(password||'').normalize('NFC'):AUTO_SECRET;
+  const bk=await crypto.subtle.importKey('raw',enc.encode(secret),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},bk,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+function buildHeader(manual,iter,salt,prefix,chunk){
+  const h=new Uint8Array(HEADER_LEN),dv=new DataView(h.buffer);
+  h.set(enc.encode(MAGIC5),0);h[4]=FORMAT_V5;h[5]=manual?1:0;
+  dv.setUint32(6,iter,false);h.set(salt,10);dv.setUint32(26,chunk,false);h.set(prefix,30);
+  return h;
+}
+function makeIV(prefix,i){const iv=new Uint8Array(12);iv.set(prefix,0);new DataView(iv.buffer).setUint32(8,i,false);return iv;}
+function makeAAD(header,final){const a=new Uint8Array(HEADER_LEN+1);a.set(header,0);a[HEADER_LEN]=final?1:0;return a;}
+
+/* ── encrypt ── */
+async function encryptItems(items,opts={}){
+  const {manual=false,password='',onProgress,signal}=opts;
+  if(!items||!items.length)throw new CxwError('noFiles');
+  const idx=enc.encode(JSON.stringify({f:items.map(it=>({n:it.name,t:it.type||'',s:it.size}))}));
+  const head=new Uint8Array(4+idx.length);new DataView(head.buffer).setUint32(0,idx.length,false);head.set(idx,4);
+  const dataBytes=items.reduce((a,i)=>a+i.size,0);
+  const totalPlain=head.length+dataBytes;
+  const nChunks=Math.ceil(totalPlain/CHUNK_SIZE);
+  const salt=crypto.getRandomValues(new Uint8Array(16)),prefix=crypto.getRandomValues(new Uint8Array(4));
+  const iter=manual?ITER_MANUAL:ITER_AUTO;
+  onProgress&&onProgress({stage:'keys',done:0,total:totalPlain});
+  await tick();
+  const key=await deriveKeyV5(manual,password,salt,iter);
+  const header=buildHeader(manual,iter,salt,prefix,CHUNK_SIZE);
+  const src=new MultiSource([head,...items.map(i=>i.file)]);
+  const sink=new BlobSink();sink.push(header);
+  let done=0;
+  const wantOf=i=>Math.min(CHUNK_SIZE,totalPlain-i*CHUNK_SIZE);
+  let pending=src.read(wantOf(0));pending.catch(()=>{});
+  for(let i=0;i<nChunks;i++){
+    throwIfAborted(signal);
+    const want=wantOf(i);
+    const plain=await pending;
+    if(i+1<nChunks){pending=src.read(wantOf(i+1));pending.catch(()=>{});}
+    if(plain.length!==want)throw new CxwError('readFailed');
+    const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:makeIV(prefix,i),additionalData:makeAAD(header,i===nChunks-1)},key,plain));
+    sink.push(ct);done+=want;
+    if(i%4===3||i===nChunks-1){onProgress&&onProgress({stage:'enc',done,total:totalPlain});await tick();}
+  }
+  return{blob:sink.finish(),size:sink.size,fileCount:items.length,originalSize:dataBytes,key};
+}
+
+/* ── stream parser (plain stream → files) ── */
+class StreamParser{
+  constructor(discard){this.discard=!!discard;this.state=0;this.buf=new Uint8Array(4);this.need=4;this.got=0;this.meta=null;this.fi=0;this.cur=null;this.files=[];}
+  feed(u8){
+    let p=0;
+    while(p<u8.length){
+      if(this.state<2){
+        const take=Math.min(this.need-this.got,u8.length-p);
+        this.buf.set(u8.subarray(p,p+take),this.got);this.got+=take;p+=take;
+        if(this.got<this.need)continue;
+        if(this.state===0){
+          const n=new DataView(this.buf.buffer).getUint32(0,false);
+          if(n<2||n>MAX_INDEX_BYTES)throw new CxwError('corrupt');
+          this.buf=new Uint8Array(n);this.need=n;this.got=0;this.state=1;
+        }else{
+          let j;try{j=JSON.parse(dec.decode(this.buf));}catch(_){throw new CxwError('corrupt');}
+          if(!j||!Array.isArray(j.f)||j.f.length<1||j.f.length>MAX_FILES_PER_BUNDLE)throw new CxwError('corrupt');
+          for(const m of j.f){if(typeof m.n!=='string'||typeof m.t!=='string'||!Number.isSafeInteger(m.s)||m.s<0)throw new CxwError('corrupt');}
+          this.meta=j.f;this.state=2;this.buf=null;this._open();
+        }
+      }else{
+        if(!this.cur)throw new CxwError('corrupt');
+        const c=this.cur,take=Math.min(c.remaining,u8.length-p);
+        if(!this.discard)c.sink.push(u8.subarray(p,p+take));
+        c.remaining-=take;p+=take;
+        if(c.remaining===0){this._close();this._open();}
+      }
+    }
+  }
+  _open(){
+    while(this.fi<this.meta.length){
+      const m=this.meta[this.fi];
+      this.cur={name:m.n,type:m.t,size:m.s,remaining:m.s,sink:this.discard?null:new BlobSink()};
+      if(m.s===0){this._close();continue;}
+      return;
+    }
+    this.cur=null;
+  }
+  _close(){
+    const c=this.cur;
+    const ty=c.type||mimeFromName(c.name);const o={name:c.name,type:ty,size:c.size};
+    if(!this.discard)o.blob=c.sink.finish(ty||'application/octet-stream');
+    this.files.push(o);this.fi++;
+  }
+  finish(){
+    if(this.state!==2||this.cur!==null||this.fi!==this.meta.length)throw new CxwError('corrupt');
+    return this.files;
+  }
+}
+
+/* ── peek (cheap validation of a .cxw before decrypting) ── */
+async function peekCxw(file){
+  const first=new Uint8Array(await file.slice(0,Math.min(HEADER_LEN,file.size)).arrayBuffer());
+  if(first.length<5)throw new CxwError('corrupt');
+  const magic=dec.decode(first.subarray(0,4));
+  if(magic===MAGIC5){
+    if(first.length<HEADER_LEN)throw new CxwError('corrupt');
+    if(first[4]!==FORMAT_V5)throw new CxwError('unsupported');
+    return{version:5,manual:!!(first[5]&1),size:file.size};
+  }
+  if(magic===MAGIC3){
+    if(first.length<25)throw new CxwError('corrupt');
+    if(first[4]!==3)throw new CxwError('unsupported');
+    const ml=new DataView(first.buffer,first.byteOffset,first.byteLength).getUint32(21,false);
+    if(25+ml>file.size)throw new CxwError('corrupt');
+    const metaCipher=new Uint8Array(await file.slice(25,25+ml).arrayBuffer());
+    try{
+      const mb=await crypto.subtle.decrypt({name:'AES-GCM',iv:first.slice(5,21)},await legacyAppKey(null),metaCipher);
+      return{version:3,manual:!!JSON.parse(dec.decode(mb)).manual,size:file.size};
+    }catch(_){throw new CxwError('corrupt');}
+  }
+  throw new CxwError('notCxw');
+}
+
+/* ── decrypt ── */
+async function decryptCxw(file,opts={}){
+  const {manual:wantsManual=false,password='',onProgress,signal,discard=false,key:keyOverride}=opts;
+  const info=await peekCxw(file);
+  if(wantsManual&&!info.manual)throw new CxwError('standardInManual');
+  if(!wantsManual&&info.manual)throw new CxwError('manualInStandard');
+  if(info.version===3)return decryptLegacy(file,{password,onProgress,signal,discard});
+  const header=new Uint8Array(await file.slice(0,HEADER_LEN).arrayBuffer());
+  const dv=new DataView(header.buffer);
+  const iter=dv.getUint32(6,false),salt=header.slice(10,26),chunk=dv.getUint32(26,false),prefix=header.slice(30,34);
+  if(chunk<4096||chunk>64*1048576||iter<1000||iter>50000000)throw new CxwError('corrupt');
+  const body=file.size-HEADER_LEN,full=chunk+TAG_LEN;
+  if(body<TAG_LEN+1)throw new CxwError('corrupt');
+  const n=Math.ceil(body/full),lastLen=body-(n-1)*full;
+  if(lastLen<TAG_LEN+1)throw new CxwError('corrupt');
+  onProgress&&onProgress({stage:'keys',done:0,total:body});
+  await tick();
+  const key=keyOverride||await deriveKeyV5(info.manual,password,salt,iter);
+  const parser=new StreamParser(discard);
+  let done=0;
+  const lenOf=i=>i<n-1?full:lastLen;
+  const readCt=i=>file.slice(HEADER_LEN+i*full,HEADER_LEN+i*full+lenOf(i)).arrayBuffer().then(b=>new Uint8Array(b));
+  let pending=readCt(0);pending.catch(()=>{});
+  for(let i=0;i<n;i++){
+    throwIfAborted(signal);
+    const len=lenOf(i);
+    const ct=await pending;
+    if(i+1<n){pending=readCt(i+1);pending.catch(()=>{});}
+    let plain;
+    try{plain=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:makeIV(prefix,i),additionalData:makeAAD(header,i===n-1)},key,ct));}
+    catch(_){throw new CxwError(i===0&&info.manual?'wrongPassword':'corrupt');}
+    parser.feed(plain);done+=len;
+    if(i%4===3||i===n-1){onProgress&&onProgress({stage:discard?'verify':'dec',done,total:body});await tick();}
+  }
+  return{files:parser.finish(),meta:{manual:info.manual,version:5}};
+}
+async function verifyCxw(blob,opts={}){
+  try{await decryptCxw(blob,{...opts,discard:true});return true;}
+  catch(e){if(e&&e.code==='aborted')throw e;throw new CxwError('verifyFailed',e&&e.code);}
+}
+
+/* ── legacy CXW3 reader (v4 and earlier files) ── */
+const _legacyStatic={p:null};
+function legacyAppKey(password){
+  const build=async()=>{
+    let secret,salt,iterations;
+    if(password){secret='cxw::manual::'+password+'::cxw-v3.6';salt=enc.encode('cxw-manual-salt::'+password+'::2026');iterations=200000;}
+    else{secret='cxw::silent-vault::v3::static-app-key-material';salt=enc.encode('cxw-salt-2026-v3');iterations=100000;}
+    const bk=await crypto.subtle.importKey('raw',enc.encode(secret),'PBKDF2',false,['deriveKey']);
+    return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations,hash:'SHA-256'},bk,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+  };
+  if(password)return build();
+  return _legacyStatic.p||(_legacyStatic.p=build());
+}
+function clearKeyCaches(){_legacyStatic.p=null;}
+function sha256(d){return crypto.subtle.digest('SHA-256',d).then(x=>new Uint8Array(x));}
+function timingSafeEqual(a,b){if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a[i]^b[i];return d===0;}
+function parseLegacyContainer(buf){
+  if(buf.length<41)throw new CxwError('corrupt');
+  const dv=new DataView(buf.buffer,buf.byteOffset,buf.byteLength);
+  const metaIV=buf.slice(5,21),ml=dv.getUint32(21,false);let o=25;
+  if(o+ml>buf.length)throw new CxwError('corrupt');
+  const metaCipher=buf.slice(o,o+ml);o+=ml;
+  const lens=[];for(let i=0;i<4;i++){lens.push(dv.getUint32(o,false));o+=4;}
+  const shards=[];
+  for(const l of lens){if(l<17||o+l>buf.length)throw new CxwError('corrupt');shards.push(buf.slice(o,o+l));o+=l;}
+  if(o!==buf.length)throw new CxwError('corrupt');
+  return{metaIV,metaCipher,shards};
+}
+function parseLegacyBundle(buf){
+  if(buf.length<8)throw new CxwError('corrupt');
+  const dv=new DataView(buf.buffer,buf.byteOffset,buf.byteLength);let o=0;
+  if(dv.getUint32(o,false)!==0x42444C32)throw new CxwError('corrupt');o+=4;
+  const count=dv.getUint32(o,false);o+=4;if(count>1000)throw new CxwError('corrupt');
+  const files=[];
+  for(let i=0;i<count;i++){
+    const nl=dv.getUint16(o,false);o+=2;if(o+nl>buf.length)throw new CxwError('corrupt');
+    const name=dec.decode(buf.subarray(o,o+nl));o+=nl;
+    const tl=dv.getUint16(o,false);o+=2;if(o+tl>buf.length)throw new CxwError('corrupt');
+    const type=dec.decode(buf.subarray(o,o+tl));o+=tl;
+    const dl=dv.getUint32(o,false);o+=4;if(o+dl>buf.length)throw new CxwError('corrupt');
+    files.push({name,type,size:dl,blob:new Blob([buf.slice(o,o+dl)],{type:type||mimeFromName(name)||'application/octet-stream'})});o+=dl;
+  }
+  if(o!==buf.length)throw new CxwError('corrupt');
+  return files;
+}
+async function decryptLegacy(file,opts={}){
+  const {password='',onProgress,signal}=opts;
+  const step=(i)=>{throwIfAborted(signal);onProgress&&onProgress({stage:'dec',done:i,total:6});};
+  step(0);
+  const buf=new Uint8Array(await file.arrayBuffer());
+  const parsed=parseLegacyContainer(buf);
+  const staticKey=await legacyAppKey(null);
+  let meta;
+  try{meta=JSON.parse(dec.decode(new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:parsed.metaIV},staticKey,parsed.metaCipher))));}
+  catch(_){throw new CxwError('corrupt');}
+  if(meta.v!==3||meta.shards!==4)throw new CxwError('unsupported');
+  const isManual=!!meta.manual;
+  const appKey=isManual?await legacyAppKey(password||''):staticKey;
+  step(1);
+  let kd,ks;
+  try{
+    kd=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(meta.wrapIV_data)},appKey,new Uint8Array(meta.wrappedK_data)));
+    ks=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(meta.wrapIV_shard)},appKey,new Uint8Array(meta.wrappedK_shard)));
+  }catch(_){throw new CxwError(isManual?'wrongPassword':'corrupt');}
+  const kData=await crypto.subtle.importKey('raw',kd,{name:'AES-GCM'},false,['decrypt']);
+  const kShard=await crypto.subtle.importKey('raw',ks,{name:'AES-GCM'},false,['decrypt']);
+  step(2);
+  const chunks=[];
+  try{
+    for(const sc of parsed.shards){chunks.push(new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:sc.slice(0,16)},kShard,sc.slice(16))));}
+  }catch(_){throw new CxwError('corrupt');}
+  step(3);
+  const ct=new Uint8Array(chunks.reduce((a,b)=>a+b.length,0));let off=0;
+  for(const c of chunks){ct.set(c,off);off+=c.length;}
+  if(!timingSafeEqual(await sha256(ct),new Uint8Array(meta.dataHash)))throw new CxwError('corrupt');
+  step(4);
+  let plain;
+  try{plain=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(meta.dataIV)},kData,ct));}
+  catch(_){throw new CxwError('corrupt');}
+  step(5);
+  const files=parseLegacyBundle(plain);
+  onProgress&&onProgress({stage:'dec',done:6,total:6});
+  return{files:opts.discard?files.map(f=>({name:f.name,type:f.type,size:f.size})):files,meta:{manual:isManual,version:3}};
+}
+
+/* ── bundle planning ── */
+function planBundles(items,limit){
+  const out=[];let cur=[],size=0;
+  for(const it of items){
+    if(limit&&cur.length&&size+it.size>limit){out.push({files:cur,size});cur=[];size=0;}
+    cur.push(it);size+=it.size;
+  }
+  if(cur.length)out.push({files:cur,size});
+  return out.map(b=>({...b,oversized:!!limit&&b.size>limit}));
+}
+
+
+
+const I18N={ar:{
+'tab.auto':'تشفير تلقائي','tab.manual':'تشفير يدوي','tab.encrypt':'تشفير','tab.decrypt':'استعادة',
+'auto.enc.title':'قم بتشفير ملفاتك قبل مشاركتها لخصوصية تامة ومشاركة غير مراقبة',
+'auto.enc.desc':'اختر ملفاتك وقم بتشفيرها ثم استعادتها دون الحاجة لكتابة كلمة سر',
+'auto.dec.title':'استعد ملفاتك المشفرة تشفير تلقائي','auto.dec.desc':'اختر ملفاً أو أكثر من .cxw — استخرج كل الملفات دفعة واحدة.',
+'auto.pickFiles':'اختر ملفات (صور أو فيديو)','pick.any':'أو اختر ملفات من أي نوع','auto.selected':'الملفات المختارة','auto.sizeLabel':'المساحة المستخدمة',
+'drop.hint':'أو اسحب الملفات وأفلتها هنا','drop.overlay':'أفلت الملفات هنا',
+'manual.title':'قم بإنشاء كلمة سر خاصة لحماية ملفاتك',
+'manual.msg1':'تذكر كلمة السر لفك تشفير الملف','manual.msg2':'لا نستطيع تذكر كلمة السر المنشأة يدوياً','manual.msg3':'سيتوجب عليك تذكر كلمة السر لكل ملف تقوم بتشفيره يدوياً',
+'manual.pickFiles':'اختر ملفات (صور أو فيديو)',
+'opt.bundleSize':'حجم كل ملف مشفّر','opt.noLimit':'بدون تقسيم','opt.verify':'تحقق من سلامة الملف المشفّر بعد إنشائه',
+'btn.startEncrypt':'ابدأ التشفير','btn.saveAll':'حفظ الكل','btn.saveAllFiles':'حفظ كل الملفات','btn.saveFolder':'📁 حفظ في مجلد...','btn.watchAll':'▶ مشاهدة الكل',
+'btn.restoreFiles':'استعادة الملفات','btn.reset':'مسح والبدء من جديد','btn.download':'تنزيل','btn.pickCxwMulti':'اختر ملفات .cxw (يمكن اختيار عدة)','btn.cancel':'إلغاء العملية',
+'prog.preparing':'جارٍ التحضير...','prog.waiting':'بانتظار البدء...','prog.working':'جارٍ العمل...','prog.done':'تم',
+'status.waitFile':'بانتظار الملف...','status.fileReady':'الملف جاهز للاستعادة','status.multiReady':'ملفات جاهزة للاستعادة',
+'result.files':'الملفات المستعادة',
+'tag.image':'صورة','tag.video':'فيديو','tag.file':'ملف',
+'toast.autoRestored':'تمت الاستعادة','toast.manRestored':'تمت الاستعادة بنجاح',
+'toast.saved':'تم حفظ الملف بنجاح','toast.sharedSave':'اختر مكان الحفظ من قائمة المشاركة','toast.openedBrowser':'تم فتح الملف في نافذة جديدة — احفظه من هناك',
+'toast.mayNotSave':'تم إرسال طلب التنزيل — ابحث في مجلد Downloads','toast.saveFailed':'تعذّر الحفظ',
+'toast.saving':'جارٍ الحفظ...','toast.inAppBrowser':'تنبيه: أنت تستخدم متصفح تطبيق. إذا لم يظهر الملف، افتح الصفحة في Chrome أو Safari.',
+'toast.error':'خطأ','toast.failed':'فشل','toast.cleaned':'تم التنظيف','toast.cancelled':'تم إلغاء العملية',
+'toast.limitSize':'تجاوز الحد 2 GB','toast.duplicate':'هذا الملف مضاف مسبقاً','toast.pickFirst':'اختر ملفات أولاً','toast.resetFirst':'اضغط «مسح والبدء من جديد» قبل إضافة ملفات أخرى',
+'toast.allSaved':'تم حفظ كل الملفات','toast.savedToFolder':'تم حفظ الملفات في المجلد','toast.savedCount':'تم حفظ {n} من {t} ملف',
+'toast.partialRestore':'تمت استعادة {n} ملف، فشل {f}','toast.created':'تم إنشاء {n} ملف مشفّر','toast.badFiles':'تم تجاهل {n} ملف غير صالح',
+'toast.dropWrong':'اسحب ملفات .cxw إلى تبويب الاستعادة','toast.dropWrong2':'هذا التبويب لا يقبل ملفات .cxw للتشفير',
+'err.notCxw':'الملف ليس من نوع cxw','err.unsupported':'إصدار الملف غير مدعوم','err.corrupt':'الملف تالف أو تم العبث به',
+'err.manualInStandard':'هذا الملف مشفّر يدوياً — افتحه من تبويب التشفير اليدوي','err.standardInManual':'هذا الملف مشفّر بدون كلمة سر — افتحه من تبويب التشفير التلقائي',
+'err.wrongPassword':'كلمة السر غير صحيحة (أو الملف تالف)','err.allFailed':'فشلت جميع عمليات فك التشفير','err.aborted':'تم إلغاء العملية',
+'err.readFailed':'تعذّرت قراءة الملف (ربما تغيّر أو حُذف أثناء التشفير)','err.noFiles':'لا توجد ملفات','err.verifyFailed':'فشل التحقق من الملف المشفّر — أعد المحاولة',
+'stage.keys':'اشتقاق المفتاح...','stage.enc':'تشفير','stage.dec':'فك التشفير','stage.verify':'التحقق من السلامة',
+'manual.password':'كلمة السر','manual.confirmPassword':'تأكيد كلمة السر','manual.passwordHint':'من 6 إلى 36 حرفاً — الأفضل 12 فأكثر',
+'manual.startEncrypt':'تشفير بكلمة السر','manual.yourPassword':'كلمة السر الخاصة بك','manual.copyPassword':'نسخ','manual.copyHint':'احفظ كلمة السر الآن — لن تظهر مرة أخرى',
+'manual.recover':'استعادة الملف','manual.recoverTitle':'إستعادة الملفات المشفرة يدوياً بكلمة سر','manual.enterPassword':'اختر ملفاً أو أكثر من .cxw وأدخل كلمة السر',
+'manual.passwordTooShort':'كلمة السر يجب أن تكون 6 أحرف على الأقل','manual.passwordTooLong':'كلمة السر يجب أن تكون 36 حرفاً كحد أقصى',
+'manual.passwordMismatch':'كلمتا السر غير متطابقتين','manual.copied':'تم نسخ كلمة السر','manual.copyFailed':'تعذّر النسخ',
+'manual.show':'إظهار','manual.hide':'إخفاء',
+'strength.0':'ضعيفة جداً','strength.1':'ضعيفة','strength.2':'مقبولة','strength.3':'جيدة','strength.4':'قوية',
+'viewer.swipe':'اسحب للتنقل بين الملفات','viewer.noPreview':'لا توجد معاينة لهذا النوع','more.show':'عرض المزيد','more.showLess':'عرض أقل',
+'delete.title':'خطوة مهمة للخصوصية','delete.ok':'تم حفظ كل الحزم ✓ يمكنك الآن حذف الأصول','delete.intro':'بعد حفظ الملفات المشفرة (.cxw)، اتبع هذه الخطوات لحذف المقاطع الأصلية من المعرض:',
+'delete.step0':'تأكد أن ملفات .cxw محفوظة وتظهر في تطبيق «الملفات» قبل حذف أي شيء','delete.step1':'افتح تطبيق الصور/الفيديو على جهازك','delete.step2':'احذف المقاطع الأصلية (حددها كلها → حذف)',
+'delete.step3':'افتح "سلة المهملات" أو "المحذوفات" في تطبيق الصور وأفرغها','delete.step4':'الملفات المشفرة .cxw لا تظهر في معرض الصور — هي ملفات بيانات عادية',
+'bundle.progress':'حزمة {i} من {n}','bundle.files':'ملفات','bundle.saved':'محفوظ','bundle.save':'حفظ','bundle.oversized':'ملف كبير','bundle.verified':'تم التحقق','dec.selected':'{n} ملفات مختارة'
+},en:{
+'tab.auto':'Auto encryption','tab.manual':'Manual encryption','tab.encrypt':'Encrypt','tab.decrypt':'Decrypt',
+'auto.enc.title':'Encrypt your files before sharing — complete privacy and unmonitored sharing',
+'auto.enc.desc':'Select your files, encrypt them, then recover them without a password',
+'auto.dec.title':'Recover your auto-encrypted files','auto.dec.desc':'Select one or more .cxw files — extract all files at once.',
+'auto.pickFiles':'Choose files (images or video)','pick.any':'Or choose files of any type','auto.selected':'Selected files','auto.sizeLabel':'Space used',
+'drop.hint':'or drag and drop files here','drop.overlay':'Drop files here',
+'manual.title':'Create your own password to protect your files',
+'manual.msg1':'Remember the password to decrypt the file','manual.msg2':'We cannot recall a manually created password','manual.msg3':'You must remember the password for each file you encrypt manually',
+'manual.pickFiles':'Choose files (images or video)',
+'opt.bundleSize':'Size of each encrypted file','opt.noLimit':'No splitting','opt.verify':'Verify each encrypted file after creating it',
+'btn.startEncrypt':'Start encryption','btn.saveAll':'Save all','btn.saveAllFiles':'Save all files','btn.saveFolder':'📁 Save to folder...','btn.watchAll':'▶ Watch all',
+'btn.restoreFiles':'Recover files','btn.reset':'Clear and start over','btn.download':'Download','btn.pickCxwMulti':'Choose .cxw files (multiple)','btn.cancel':'Cancel operation',
+'prog.preparing':'Preparing...','prog.waiting':'Waiting to start...','prog.working':'Working...','prog.done':'Done',
+'status.waitFile':'Waiting for file...','status.fileReady':'File ready to recover','status.multiReady':'files ready to recover',
+'result.files':'Recovered files',
+'tag.image':'Image','tag.video':'Video','tag.file':'File',
+'toast.autoRestored':'Recovered','toast.manRestored':'Recovered successfully',
+'toast.saved':'File saved successfully','toast.sharedSave':'Choose where to save from the share menu','toast.openedBrowser':'File opened in a new window — save it from there',
+'toast.mayNotSave':'Download requested — check the Downloads folder','toast.saveFailed':'Save failed',
+'toast.saving':'Saving...','toast.inAppBrowser':'Note: you are in an in-app browser. If the file does not appear, open this page in Chrome or Safari.',
+'toast.error':'Error','toast.failed':'Failed','toast.cleaned':'Cleaned','toast.cancelled':'Operation cancelled',
+'toast.limitSize':'Exceeds 2 GB limit','toast.duplicate':'This file is already added','toast.pickFirst':'Choose files first','toast.resetFirst':'Press “Clear and start over” before adding more files',
+'toast.allSaved':'All files saved','toast.savedToFolder':'Files saved to folder','toast.savedCount':'Saved {n} of {t} files',
+'toast.partialRestore':'Restored {n}, failed {f}','toast.created':'Created {n} encrypted files','toast.badFiles':'{n} invalid file(s) ignored',
+'toast.dropWrong':'Drop .cxw files on a Decrypt tab','toast.dropWrong2':'This tab does not accept .cxw files for encryption',
+'err.notCxw':'Not a cxw file','err.unsupported':'Unsupported version','err.corrupt':'File is corrupted or was tampered with',
+'err.manualInStandard':'This file was encrypted manually — open it in the Manual tab','err.standardInManual':'This file has no password — open it in the Auto tab',
+'err.wrongPassword':'Wrong password (or file is damaged)','err.allFailed':'All decryption attempts failed','err.aborted':'Operation cancelled',
+'err.readFailed':'Could not read a file (it may have changed or been deleted during encryption)','err.noFiles':'No files','err.verifyFailed':'Verification of the encrypted file failed — try again',
+'stage.keys':'Deriving key...','stage.enc':'Encrypting','stage.dec':'Decrypting','stage.verify':'Verifying integrity',
+'manual.password':'Password','manual.confirmPassword':'Confirm password','manual.passwordHint':'6 to 36 characters — 12+ is better',
+'manual.startEncrypt':'Encrypt with password','manual.yourPassword':'Your password','manual.copyPassword':'Copy','manual.copyHint':'Save this password now — it will not appear again',
+'manual.recover':'Recover file','manual.recoverTitle':'Recover files manually encrypted with a password','manual.enterPassword':'Select one or more .cxw files and enter the password',
+'manual.passwordTooShort':'Password must be at least 6 characters','manual.passwordTooLong':'Password must be at most 36 characters',
+'manual.passwordMismatch':'Passwords do not match','manual.copied':'Password copied','manual.copyFailed':'Copy failed',
+'manual.show':'Show','manual.hide':'Hide',
+'strength.0':'Very weak','strength.1':'Weak','strength.2':'Fair','strength.3':'Good','strength.4':'Strong',
+'viewer.swipe':'Swipe to browse between files','viewer.noPreview':'No preview for this type','more.show':'Show more','more.showLess':'Show less',
+'delete.title':'Important privacy step','delete.ok':'All bundles saved ✓ You can now delete the originals','delete.intro':'After saving encrypted files (.cxw), follow these steps to delete originals from gallery:',
+'delete.step0':'Make sure the .cxw files are saved and visible in your Files app before deleting anything','delete.step1':'Open Photos/Videos app','delete.step2':'Delete original videos (select all → delete)',
+'delete.step3':'Open Trash/Recently Deleted in Photos app and empty it','delete.step4':'Encrypted .cxw files do not appear in gallery — they are data files',
+'bundle.progress':'Bundle {i} of {n}','bundle.files':'files','bundle.saved':'Saved','bundle.save':'Save','bundle.oversized':'Large file','bundle.verified':'Verified','dec.selected':'{n} files selected'
+}};
+
+/* ═══════════════ UI ═══════════════ */
+const MB=1048576;
+const MAX_TOTAL_BYTES=2048*MB;
+const MAX_VISIBLE_THUMBS=6;
+const RING_CIRCUMFERENCE=2*Math.PI*30;
+const PULL_THRESHOLD=140;
+const PWD_MIN=6,PWD_MAX=36;
+const $=id=>{const e=document.getElementById(id);if(!e)console.error('[cxw] missing #'+id);return e;};
+const MODES={auto:{p:'auto',P:'Auto',manual:false},manual:{p:'man',P:'Man',manual:true}};
+const I=(mode,tpl)=>$(tpl.replace('{P}',MODES[mode].P).replace('{p}',MODES[mode].p));
+
+let currentLang='ar';
+function t(k){return(I18N[currentLang]&&I18N[currentLang][k])||k;}
+function tf(k,v){return t(k).replace(/\{(\w+)\}/g,(_,n)=>v&&v[n]!==undefined?v[n]:'');}
+function errMsg(e){return e&&e.code&&I18N.ar['err.'+e.code]?t('err.'+e.code):(e&&e.message)||t('toast.failed');}
+
+/* ── helpers ── */
+const escapeHtml=s=>String(s==null?'':s).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+const sanitizeFilename=n=>String(n||'file').replace(/[<>:"\/\\|?*\x00-\x1f]/g,'_').substring(0,200)||'file';
+function extOf(name,fb='.bin'){const m=(name||'').match(/\.[a-z0-9]+$/i);return m?m[0]:fb;}
+function formatBytes(b){if(b<1024)return b+' B';if(b<MB)return(b/1024).toFixed(1)+' KB';if(b<1024*MB)return(b/MB).toFixed(2)+' MB';return(b/(1024*MB)).toFixed(2)+' GB';}
+function randomName(ext='.cxw'){return Array.from(crypto.getRandomValues(new Uint8Array(6))).map(x=>x.toString(16).padStart(2,'0')).join('')+ext;}
+const EXT_MIME={jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',avif:'image/avif',bmp:'image/bmp',heic:'image/heic',heif:'image/heif',mp4:'video/mp4',m4v:'video/mp4',mov:'video/quicktime',webm:'video/webm',mkv:'video/x-matroska','3gp':'video/3gpp',avi:'video/x-msvideo',pdf:'application/pdf'};
+function mimeFromName(n){const m=/\.([a-z0-9]+)$/i.exec(n||'');return(m&&EXT_MIME[m[1].toLowerCase()])||'';}
+function kindOf(type,name){const ty=type||mimeFromName(name);if(ty.startsWith('image/'))return'image';if(ty.startsWith('video/'))return'video';return'file';}
+function uniqueName(used,name){let n=name,i=1;const d=name.lastIndexOf('.');const base=d>0?name.slice(0,d):name,ext=d>0?name.slice(d):'';while(used.has(n.toLowerCase()))n=`${base} (${i++})${ext}`;used.add(n.toLowerCase());return n;}
+const yieldToUI=tick;
+const isMobileDevice=()=>/Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry/i.test(navigator.userAgent||'');
+const isAndroidWebView=()=>{const u=navigator.userAgent||'';return /Android/.test(u)&&/\bwv\b/.test(u);};
+const isInAppBrowser=()=>/FBAN|FBAV|Instagram|WhatsApp|Line|MicroMessenger|Snapchat|Twitter/i.test(navigator.userAgent||'');
+let _inAppWarned=false;
+function maybeWarnInApp(){if(_inAppWarned)return;if(isInAppBrowser()){_inAppWarned=true;toast(t('toast.inAppBrowser'),5000);}}
+
+function toast(msg,ms=2600){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(el._timer);el._timer=setTimeout(()=>el.classList.remove('show'),ms);}
+
+/* object URL tracking */
+const _urls=new Set();
+const trackURL=u=>{_urls.add(u);return u;};
+function releaseURL(u){if(u&&_urls.has(u)){try{URL.revokeObjectURL(u);}catch(_){}_urls.delete(u);}}
+function releaseAllTracked(){_urls.forEach(u=>{try{URL.revokeObjectURL(u);}catch(_){}});_urls.clear();}
+function disposeMedia(c){if(!c)return;c.querySelectorAll('img,video').forEach(el=>{if(el.tagName==='VIDEO'){try{el.pause();}catch(_){}}el.removeAttribute('src');if(el.tagName==='VIDEO'){try{el.load();}catch(_){}}});}
+
+/* lazy media + fallbacks (no inline handlers: CSP-friendly) */
+const _io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;const el=en.target;_io.unobserve(el);if(el.dataset.src){el.src=el.dataset.src;delete el.dataset.src;}}),{rootMargin:'400px'}):null;
+function lazyLoad(c){c.querySelectorAll('[data-src]').forEach(el=>{if(_io)_io.observe(el);else{el.src=el.dataset.src;delete el.dataset.src;}});}
+document.addEventListener('loadedmetadata',e=>{const v=e.target;if(v&&v.tagName==='VIDEO'&&v.dataset.thumb==='1'){try{v.currentTime=Math.min(0.5,(v.duration||1)*0.1);}catch(_){}}},true);
+document.addEventListener('error',e=>{const el=e.target;if(!el||!el.dataset||!el.dataset.fallback||(el.tagName!=='IMG'&&el.tagName!=='VIDEO'))return;const d=document.createElement('div');d.className='file-tile';d.textContent=el.dataset.ext||'FILE';el.replaceWith(d);},true);
+function mediaHTML(url,kind,name){
+  const ext=(extOf(name,'').replace('.','')||'FILE').toUpperCase().slice(0,5);
+  if(kind==='image')return`<img data-src="${url}" alt="" decoding="async" data-fallback="1" data-ext="${escapeHtml(ext)}">`;
+  if(kind==='video')return`<video data-src="${url}" muted playsinline preload="metadata" data-thumb="1" data-fallback="1" data-ext="${escapeHtml(ext)}"></video>`;
+  return`<div class="file-tile">${escapeHtml(ext)}</div>`;
+}
+
+/* ── thumbnails: small JPEG previews generated one by one, only for visible tiles ── */
+const THUMB=320;
+let _rid=0;const _recs=new Map();
+function ensureId(r){if(!r._id){r._id=++_rid;}_recs.set(r._id,r);return r._id;}
+function disposeRec(r){if(!r)return;r._dead=true;releaseURL(r.url);releaseURL(r.thumb);r.thumb=null;r.url=null;if(r._id)_recs.delete(r._id);}
+function canvasToUrl(cv){return new Promise(res=>cv.toBlob(b=>res(b?trackURL(URL.createObjectURL(b)):null),'image/jpeg',0.72));}
+function drawCover(src,sw,sh){
+  if(!sw||!sh)throw new Error('size');
+  const cv=document.createElement('canvas');cv.width=cv.height=THUMB;
+  const sc=Math.max(THUMB/sw,THUMB/sh),w=sw*sc,h=sh*sc;
+  cv.getContext('2d').drawImage(src,(THUMB-w)/2,(THUMB-h)/2,w,h);return cv;
+}
+async function imageThumb(blob){
+  let bmp=null;
+  try{bmp=await createImageBitmap(blob,{resizeWidth:THUMB*1.5,resizeQuality:'medium'});}catch(_){}
+  if(!bmp){try{bmp=await createImageBitmap(blob);}catch(_){}}
+  if(bmp){try{return await canvasToUrl(drawCover(bmp,bmp.width,bmp.height));}finally{try{bmp.close();}catch(_){}}}
+  return new Promise(res=>{
+    const u=URL.createObjectURL(blob),im=new Image();
+    im.onload=async()=>{let o=null;try{o=await canvasToUrl(drawCover(im,im.naturalWidth,im.naturalHeight));}catch(_){}URL.revokeObjectURL(u);res(o);};
+    im.onerror=()=>{URL.revokeObjectURL(u);res(null);};im.src=u;
+  });
+}
+function videoThumb(blob){
+  return new Promise(res=>{
+    const v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';
+    const u=URL.createObjectURL(blob);let done=false,to=0;
+    const fin=async ok=>{
+      if(done)return;done=true;clearTimeout(to);let out=null;
+      if(ok){try{out=await canvasToUrl(drawCover(v,v.videoWidth,v.videoHeight));}catch(_){}}
+      v.removeAttribute('src');try{v.load();}catch(_){}URL.revokeObjectURL(u);res(out);
+    };
+    to=setTimeout(()=>fin(false),9000);
+    v.addEventListener('loadeddata',()=>{try{v.currentTime=Math.min(1,(v.duration||2)*0.1);}catch(_){fin(true);}},{once:true});
+    v.addEventListener('seeked',()=>fin(true),{once:true});
+    v.addEventListener('error',()=>fin(false),{once:true});
+    v.src=u;
+  });
+}
+const _tq=[];let _tact=0;
+function queueThumb(rec){
+  if(rec.thumb)return Promise.resolve(rec.thumb);
+  if(rec._tp)return rec._tp;
+  rec._tp=new Promise(res=>{_tq.push({rec,res});pumpThumbs();});
+  return rec._tp;
+}
+function pumpThumbs(){
+  while(_tact<3&&_tq.length){
+    const j=_tq.shift();
+    if(j.rec._dead){j.res(null);continue;}
+    _tact++;
+    const kind=kindOf(j.rec.type,j.rec.name),src=j.rec.file||j.rec.blob;
+    (kind==='video'?videoThumb(src):imageThumb(src)).catch(()=>null).then(u=>{
+      if(j.rec._dead&&u){releaseURL(u);u=null;}
+      j.rec.thumb=u||null;j.res(u||null);_tact--;pumpThumbs();
+    });
+  }
+}
+function thumbHTML(rec,kind,name){
+  const ext=(extOf(name,'').replace('.','')||'FILE').toUpperCase().slice(0,5);
+  if(kind==='file')return`<div class="file-tile">${escapeHtml(ext)}</div>`;
+  const id=ensureId(rec);
+  if(rec.thumb)return`<img src="${rec.thumb}" alt="" decoding="async">`;
+  return`<div class="file-tile tph" data-rid="${id}">${escapeHtml(ext)}</div>`;
+}
+function loadThumbInto(el){
+  const rec=_recs.get(+el.dataset.rid);if(!rec)return;
+  queueThumb(rec).then(u=>{
+    if(!u||!el.isConnected)return;
+    const img=new Image();img.alt='';img.decoding='async';
+    img.onload=()=>{if(el.isConnected)el.replaceWith(img);};img.src=u;
+  });
+}
+const _tio='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;_tio.unobserve(en.target);loadThumbInto(en.target);}),{rootMargin:'300px'}):null;
+function observeThumbs(c){c.querySelectorAll('.tph').forEach(el=>{if(_tio)_tio.observe(el);else loadThumbInto(el);});}
+const _sio='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)loadMore(en.target.dataset.mode);}),{rootMargin:'700px'}):null;
+
+/* ── language / theme ── */
+function setLang(lang){
+  currentLang=lang;
+  const r=document.documentElement;r.setAttribute('data-lang',lang);r.setAttribute('dir',lang==='ar'?'rtl':'ltr');r.setAttribute('lang',lang);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(I18N[lang][k])el.textContent=I18N[lang][k];});
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{const k=el.getAttribute('data-i18n-aria');if(I18N[lang][k])el.setAttribute('aria-label',I18N[lang][k]);});
+  $('langLabel').textContent=lang==='ar'?'EN':'ع';
+}
+function setTheme(th){document.documentElement.setAttribute('data-theme',th);const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',th==='light'?'#F5F7FA':'#0F1419');}
+
+/* ── state ── */
+const newEnc=(keep)=>({files:[],results:[],expanded:false,busy:false,controller:null,limit:keep?keep.limit:200*MB,verify:keep?keep.verify:true,password:''});
+const newDec=()=>({files:[],restored:[],busy:false,controller:null,started:false,shown:0});
+const S={auto:{enc:newEnc(),dec:newDec()},manual:{enc:newEnc(),dec:newDec()}};
+
+/* ── wake lock ── */
+let _wl=null;
+async function lockScreen(){try{if(navigator.wakeLock)_wl=await navigator.wakeLock.request('screen');}catch(_){}}
+function unlockScreen(){try{_wl&&_wl.release();}catch(_){}_wl=null;}
+
+/* ── confirm modal (kept for future use) ── */
+
+/* ── progress presenter ── */
+function makeProgress(bar,pct,stage,status,totalBytes,label){
+  const t0=performance.now();let last=0;
+  return{
+    set(frac,stageText,doneBytes,force){
+      const now=performance.now();if(!force&&now-last<90)return;last=now;
+      const p=Math.max(0,Math.min(100,Math.round(frac*100)));
+      bar.style.width=p+'%';pct.textContent=p+'%';
+      bar.parentElement.parentElement.setAttribute('aria-valuenow',p);
+      let sp='';const el=(now-t0)/1000;
+      if(el>2&&doneBytes>8*MB)sp=' — '+(doneBytes/MB/el).toFixed(1)+' MB/s';
+      const txt=(label?label+' — ':'')+stageText+sp;
+      stage.textContent=txt;status.textContent=txt;
+    }
+  };
+}
+const stageLabel=s=>t('stage.'+s);
+
+/* ── saving ── */
+async function smartSaveFile(data,fileName,mimeType,description,ext){
+  let safeName=fileName||'file';
+  if(!safeName.toLowerCase().endsWith(ext.toLowerCase()))safeName+=ext;
+  const blob=data instanceof Blob?data:new Blob([data],{type:mimeType});
+  const mobile=isMobileDevice(),webview=isAndroidWebView();
+  const CP=window.Capacitor&&window.Capacitor.Plugins;
+  if(CP&&CP.Filesystem&&CP.Share){
+    try{
+      const FS=CP.Filesystem,path='cxw_'+Date.now()+'_'+safeName.replace(/[\\/:*?"<>|]/g,'_'),STEP=3*1024*1024;
+      for(let o=0;o<blob.size||o===0;o+=STEP){
+        const buf=new Uint8Array(await blob.slice(o,o+STEP).arrayBuffer());let bin='';
+        for(let i=0;i<buf.length;i+=0x8000)bin+=String.fromCharCode.apply(null,buf.subarray(i,i+0x8000));
+        const data=btoa(bin);
+        if(o===0)await FS.writeFile({path,data,directory:'CACHE'});else await FS.appendFile({path,data,directory:'CACHE'});
+        if(blob.size===0)break;
+      }
+      const u=await FS.getUri({path,directory:'CACHE'});
+      await CP.Share.share({title:safeName,url:u.uri,dialogTitle:safeName});
+      return{ok:true,mode:'share'};
+    }catch(err){if(err&&/cancel/i.test(String(err.message||err)))return{ok:false,mode:'cancel'};console.warn('Native save failed:',err);}
+  }
+  if(mobile&&navigator.share){
+    try{
+      const file=new File([blob],safeName,{type:mimeType});let can=true;
+      if(navigator.canShare){try{can=navigator.canShare({files:[file]});}catch(_){can=true;}}
+      if(can){await navigator.share({files:[file],title:safeName});return{ok:true,mode:'share'};}
+    }catch(err){if(err&&err.name==='AbortError')return{ok:false,mode:'cancel'};console.warn('Share failed:',err);}
+  }
+  if(!mobile&&typeof window.showSaveFilePicker==='function'&&window.isSecureContext){
+    try{
+      const h=await window.showSaveFilePicker({suggestedName:safeName,types:[{description:description||'File',accept:{[mimeType||'application/octet-stream']:[ext]}}]});
+      const w=await h.createWritable();await w.write(blob);await w.close();return{ok:true,mode:'picker'};
+    }catch(err){if(err&&err.name==='AbortError')return{ok:false,mode:'cancel'};console.warn('Picker failed:',err);}
+  }
+  if(webview){
+    try{const url=URL.createObjectURL(blob);const win=window.open(url,'_blank');if(win){setTimeout(()=>{try{URL.revokeObjectURL(url);}catch(_){}},180000);return{ok:true,mode:'window'};}}catch(err){console.warn(err);}
+  }
+  try{
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=safeName;a.style.display='none';
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{try{a.remove();}catch(_){}try{URL.revokeObjectURL(url);}catch(_){}},180000);
+    return{ok:true,mode:'download',isWebView:webview};
+  }catch(err){console.warn(err);}
+  return{ok:false,mode:'error'};
+}
+function handleSaveResult(res,filename){
+  if(!res||(!res.ok&&res.mode!=='cancel')){toast(t('toast.saveFailed'),4000);return;}
+  if(res.mode==='cancel')return;
+  if(res.mode==='picker')toast(t('toast.saved'),4000);
+  else if(res.mode==='share')toast(t('toast.sharedSave'),5000);
+  else if(res.mode==='window')toast(t('toast.openedBrowser'),6000);
+  else if(res.mode==='download')toast(res.isWebView?t('toast.mayNotSave')+' — '+(filename||''):t('toast.saved')+' — '+(filename||''),res.isWebView?7000:5000);
+}
+const canPickFolder=()=>typeof window.showDirectoryPicker==='function'&&window.isSecureContext&&!isMobileDevice();
+
+/* items: [{name,blob,type,saved}] ; kind: 'bundles' | 'files' */
+async function saveAllItems(items,kind){
+  const bundles=kind==='bundles';
+  const mimeOf=r=>bundles?'application/octet-stream':(r.type||mimeFromName(r.name)||'application/octet-stream');
+  const unsaved=items.filter(r=>!r.saved);
+  if(!unsaved.length){toast(t('toast.allSaved'));return;}
+  maybeWarnInApp();
+  const used=new Set();
+  const nameOf=new Map(unsaved.map(r=>[r,uniqueName(used,sanitizeFilename(r.name))]));
+  if(canPickFolder()){
+    try{
+      const dir=await window.showDirectoryPicker({mode:'readwrite',id:'cxw-vault'});
+      let ok=0;
+      for(let i=0;i<unsaved.length;i++){
+        const r=unsaved[i];
+        try{
+          const fh=await dir.getFileHandle(nameOf.get(r),{create:true});const w=await fh.createWritable();
+          await w.write(r.blob);await w.close();r.saved=true;ok++;toast(`${t('toast.saving')} ${i+1}/${unsaved.length}`,800);
+        }catch(e){console.error('folder save failed',r.name,e);}
+        await yieldToUI();
+      }
+      toast(ok?`${t('toast.savedToFolder')}: ${dir.name||''} (${ok}/${unsaved.length})`:t('toast.saveFailed'),5000);
+      return;
+    }catch(err){if(err&&err.name==='AbortError')return;console.warn('folder picker failed',err);}
+  }
+  if(isMobileDevice()&&navigator.share&&navigator.canShare){
+    try{
+      const files=unsaved.map(r=>new File([r.blob],nameOf.get(r),{type:mimeOf(r)}));
+      if(navigator.canShare({files})){await navigator.share({files});unsaved.forEach(r=>r.saved=true);return;}
+    }catch(err){if(err&&err.name==='AbortError')return;console.warn('bulk share failed',err);}
+  }
+  let ok=0;
+  for(let i=0;i<unsaved.length;i++){
+    const r=unsaved[i];toast(`${t('toast.saving')} ${i+1}/${unsaved.length}`,1500);
+    try{
+      const nm=nameOf.get(r);const res=await smartSaveFile(r.blob,nm,mimeOf(r),bundles?'cxw':'file',extOf(nm,bundles?'.cxw':'.bin'));
+      if(res&&res.mode==='cancel')break;
+      if(res&&res.ok){r.saved=true;ok++;}
+    }catch(e){console.error(e);}
+    await yieldToUI();
+  }
+  toast(ok?tf('toast.savedCount',{n:ok,t:unsaved.length}):t('toast.saveFailed'),4000);
+}
+
+/* ── pull-to-clean (unchanged behaviour) ── */
+let pullIndicator,ringProgress;
+const pullState={active:false,startY:0,currentProgress:0,triggered:false,ready:false,autoHideTimer:null};
+let rafId=null;
+function updateRing(p){
+  if(!ringProgress)return;
+  ringProgress.style.strokeDashoffset=RING_CIRCUMFERENCE*(1-p);
+  pullIndicator.style.bottom=(-90+p*100)+'px';pullIndicator.style.opacity=Math.min(1,p*2);
+  pullIndicator.classList.toggle('pulling',p>0.02);pullIndicator.classList.toggle('complete',p>=1);
+}
+function markReady(){pullState.ready=true;pullIndicator.classList.add('ready');}
+function resetRing(){
+  if(!ringProgress)return;clearTimeout(pullState.autoHideTimer);
+  pullIndicator.classList.remove('complete','ready','pulling');pullIndicator.style.opacity='0';pullIndicator.style.bottom='-90px';
+  setTimeout(()=>{ringProgress.style.strokeDashoffset=RING_CIRCUMFERENCE;},350);
+  pullState.currentProgress=0;pullState.triggered=false;pullState.ready=false;
+}
+function scheduleRing(p){if(rafId)return;rafId=requestAnimationFrame(()=>{updateRing(p);rafId=null;});}
+function onPullComplete(){if(pullState.triggered)return;pullState.triggered=true;markReady();clearTimeout(pullState.autoHideTimer);pullState.autoHideTimer=setTimeout(()=>{if(pullState.ready)resetRing();},2500);}
+const isAtBottom=()=>(window.innerHeight+window.scrollY)>=(document.documentElement.scrollHeight-3);
+
+/* ═════════ ENCRYPT side ═════════ */
+function syncEnc(mode){
+  const st=S[mode].enc,has=st.files.length>0,hasRes=st.results.length>0;
+  I(mode,'{p}Meter').style.display=has?'block':'none';
+  I(mode,'{p}Opts').style.display=has?'block':'none';
+  I(mode,'btnStart{P}Enc').style.display=has&&!hasRes&&!st.busy?'flex':'none';
+  I(mode,'{p}EncResult').style.display=st.busy||hasRes?'block':'none';
+  I(mode,'btnCancel{P}Enc').style.display=st.busy?'flex':'none';
+  const done=hasRes&&!st.busy;
+  I(mode,'btnSaveAll{P}').style.display=done?'flex':'none';
+  I(mode,'btnFolder{P}').style.display=done&&canPickFolder()?'flex':'none';
+  I(mode,'{p}DeleteWarning').style.display=done?'block':'none';
+  I(mode,'{p}BundleSize').disabled=st.busy||hasRes;I(mode,'{p}Verify').disabled=st.busy||hasRes;
+  if(mode==='manual'){$('manPassword').disabled=$('manPasswordConfirm').disabled=st.busy||hasRes;$('manPwdCard').style.display=hasRes?'block':'none';}
+  updateSavedState(mode);
+}
+function updateSavedState(mode){
+  const st=S[mode].enc,w=I(mode,'{p}DeleteWarning');
+  const all=st.results.length>0&&st.results.every(r=>r.saved);
+  w.classList.toggle('ok',all);
+  I(mode,'{p}DeleteTitle').textContent=t(all?'delete.ok':'delete.title');
+}
+function renderThumbs(mode){
+  const st=S[mode].enc,wrap=I(mode,'{p}Thumbs'),meter=I(mode,'{p}Meter');
+  disposeMedia(wrap);wrap.innerHTML='';
+  const all=st.files,showAll=st.expanded||all.length<=MAX_VISIBLE_THUMBS;
+  all.forEach((it,i)=>{
+    if(!showAll&&i>=MAX_VISIBLE_THUMBS)return;
+    const kind=kindOf(it.type,it.name);
+    const tag=t(kind==='image'?'tag.image':kind==='video'?'tag.video':'tag.file');
+    wrap.insertAdjacentHTML('beforeend',`<div class="thumb">${thumbHTML(it,kind,it.name)}<span class="badge">${i+1}</span>${st.busy||st.results.length?'':`<span class="del" data-i="${i}" role="button" aria-label="remove">×</span>`}<span class="type-tag">${tag}</span><span class="name">${escapeHtml(it.name)}</span></div>`);
+  });
+  observeThumbs(wrap);
+  const old=meter.querySelector('.thumb-more-btn');if(old)old.remove();
+  const hidden=all.length-MAX_VISIBLE_THUMBS;
+  if(hidden>0){
+    const b=document.createElement('button');b.type='button';b.className='thumb-more-btn';
+    b.textContent=st.expanded?t('more.showLess'):`${t('more.show')} (+${hidden})`;
+    b.addEventListener('click',()=>{st.expanded=!st.expanded;renderThumbs(mode);setTimeout(()=>{try{wrap.scrollIntoView({behavior:'smooth',block:'start'});}catch(_){}},50);});
+    meter.appendChild(b);
+  }
+  const used=all.reduce((a,f)=>a+f.size,0),pct=Math.min(100,used/MAX_TOTAL_BYTES*100);
+  I(mode,'{p}Count').textContent=all.length;I(mode,'{p}Used').textContent=formatBytes(used);
+  const bar=I(mode,'{p}Bar');bar.style.width=pct+'%';bar.classList.remove('warn','danger');
+  if(pct>=95)bar.classList.add('danger');else if(pct>=70)bar.classList.add('warn');
+}
+function addFiles(mode,list){
+  const st=S[mode].enc,files=Array.from(list||[]);
+  if(!files.length)return;
+  if(st.busy||st.results.length){toast(t('toast.resetFirst'));return;}
+  let used=st.files.reduce((a,f)=>a+f.size,0),added=0,skipSize=0,skipDup=0,bad=0;
+  for(const f of files){
+    if(/\.cxw$/i.test(f.name)){bad++;continue;}
+    if(st.files.some(x=>x.file.name===f.name&&x.file.size===f.size&&x.file.lastModified===f.lastModified)){skipDup++;continue;}
+    if(used+f.size>MAX_TOTAL_BYTES){skipSize++;continue;}
+    st.files.push({file:f,name:f.name,size:f.size,type:f.type||mimeFromName(f.name)});used+=f.size;added++;
+  }
+  if(skipSize)toast(t('toast.limitSize'));else if(skipDup)toast(t('toast.duplicate'));else if(bad)toast(t('toast.dropWrong2'));
+  if(added){renderThumbs(mode);syncEnc(mode);}
+}
+function resetEnc(mode){
+  const st=S[mode].enc;
+  if(st.controller)try{st.controller.abort();}catch(_){}
+  disposeMedia(I(mode,'{p}Thumbs'));st.files.forEach(disposeRec);
+  S[mode].enc=newEnc(st);
+  I(mode,'in{P}Enc').value='';I(mode,'in{P}EncAny').value='';I(mode,'{p}Thumbs').innerHTML='';
+  const old=I(mode,'{p}Meter').querySelector('.thumb-more-btn');if(old)old.remove();
+  I(mode,'{p}BundleList').innerHTML='';
+  I(mode,'{p}EncBar').style.width='0%';I(mode,'{p}EncPct').textContent='0%';I(mode,'{p}EncStage').textContent=t('prog.preparing');I(mode,'{p}EncStatus').textContent=t('prog.working');
+  if(mode==='manual'){$('manPassword').value='';$('manPasswordConfirm').value='';$('manPwdDisplay').textContent='—';updateStrength('');}
+  syncEnc(mode);
+}
+function renderBundleList(mode){
+  const st=S[mode].enc,c=I(mode,'{p}BundleList');c.innerHTML='';
+  st.results.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='bundle-item'+(r.oversized?' oversized':'');
+    const badges=(r.oversized?`<span class="oversized-badge">• ${t('bundle.oversized')}</span>`:'')+(r.verified?`<span class="ok-badge">✓ ${t('bundle.verified')}</span>`:'');
+    d.innerHTML=`<div class="bundle-info"><div class="bundle-name">${escapeHtml(r.name)}</div><div class="bundle-meta">${r.fileCount} ${t('bundle.files')} • <bdi dir="ltr">${formatBytes(r.blob.size)}</bdi>${badges}</div></div><button class="bundle-save${r.saved?' saved':''}" data-idx="${i}" type="button">${r.saved?t('bundle.saved'):t('bundle.save')}</button>`;
+    c.appendChild(d);
+  });
+}
+async function runEncryption(mode){
+  const M=MODES[mode],st=S[mode].enc;
+  if(st.busy)return;
+  if(!st.files.length){toast(t('toast.pickFirst'));return;}
+  const items=st.files.map(f=>({file:f.file,name:f.name,type:f.type||mimeFromName(f.name),size:f.size}));
+  const plan=planBundles(items,st.limit);
+  const totalBytes=items.reduce((a,i)=>a+i.size,0)||1;
+  const bar=I(mode,'{p}EncBar'),pct=I(mode,'{p}EncPct'),stage=I(mode,'{p}EncStage'),status=I(mode,'{p}EncStatus');
+  st.results=[];st.busy=true;st.controller=new AbortController();
+  I(mode,'{p}BundleList').innerHTML='';renderThumbs(mode);syncEnc(mode);
+  const prog=makeProgress(bar,pct,stage,status,totalBytes,'');
+  await lockScreen();
+  let doneBytes=0,cancelled=false,failed=false;
+  const signal=st.controller.signal;
+  try{
+    for(let b=0;b<plan.length;b++){
+      const bd=plan[b],label=tf('bundle.progress',{i:b+1,n:plan.length});
+      const wEnc=st.verify?0.5:1;
+      const show=(frac,sg,force)=>prog.set((doneBytes+bd.size*frac)/totalBytes,(plan.length>1?label+' — ':'')+stageLabel(sg),doneBytes+bd.size*frac,force);
+      show(0,'keys',true);
+      const opts={manual:M.manual,password:st.password,signal};
+      const res=await encryptItems(bd.files,{...opts,onProgress:p=>show(p.stage==='keys'?0:wEnc*p.done/p.total,p.stage,false)});
+      let verified=false;
+      if(st.verify){
+        await verifyCxw(res.blob,{...opts,key:res.key,signal,onProgress:p=>show(0.5+0.5*p.done/p.total,'verify',false)});
+        verified=true;
+      }
+      doneBytes+=bd.size;
+      st.results.push({name:randomName(),blob:res.blob,fileCount:res.fileCount,size:res.originalSize,saved:false,oversized:bd.oversized,verified});
+      renderBundleList(mode);await yieldToUI();
+    }
+    prog.set(1,t('prog.done'),totalBytes,true);
+  }catch(e){
+    if(e&&e.code==='aborted'){cancelled=true;toast(t('toast.cancelled'),3000);}
+    else{failed=true;console.error(e);status.textContent=t('toast.failed')+': '+errMsg(e);toast(t('toast.error')+': '+errMsg(e),6000);}
+  }finally{unlockScreen();st.busy=false;st.controller=null;}
+  if(S[mode].enc!==st)return; // wiped meanwhile
+  renderThumbs(mode);renderBundleList(mode);syncEnc(mode);
+  if(!cancelled&&!failed)toast(tf('toast.created',{n:st.results.length}),4500);
+}
+
+/* ═════════ DECRYPT side ═════════ */
+function syncDec(mode){
+  const st=S[mode].dec,n=st.files.length;
+  const nm=I(mode,'{p}DecName');nm.style.display=n?'inline-flex':'none';
+  nm.textContent=n===1?st.files[0].name:tf('dec.selected',{n});
+  I(mode,'btnRestore{P}').disabled=!n||st.busy;
+  I(mode,'btnCancel{P}Dec').style.display=st.busy?'flex':'none';
+  I(mode,'{p}DecProgWrap').style.display=st.started?'block':'none';
+  I(mode,'{p}DecGallery').style.display=st.restored.length?'block':'none';
+  I(mode,'{p}DecGalleryCount').textContent=st.restored.length;
+}
+async function pickCxw(mode,list){
+  const st=S[mode].dec,files=Array.from(list||[]);
+  if(!files.length||st.busy)return;
+  const ok=[];let bad=0,firstErr=null;
+  for(const f of files){
+    try{
+      const info=await peekCxw(f);
+      if(info.manual!==MODES[mode].manual)throw new CxwError(info.manual?'manualInStandard':'standardInManual');
+      ok.push(f);
+    }catch(e){bad++;firstErr=firstErr||e;}
+  }
+  if(bad)toast(ok.length?tf('toast.badFiles',{n:bad}):errMsg(firstErr),5000);
+  if(!ok.length)return;
+  st.files=ok;I(mode,'{p}DecStatus').textContent=t('status.fileReady');syncDec(mode);
+}
+function resetDec(mode){
+  const st=S[mode].dec;if(st.controller)try{st.controller.abort();}catch(_){}
+  const grid=I(mode,'{p}DecGrid');disposeMedia(grid);st.restored.forEach(disposeRec);grid.innerHTML='';
+  S[mode].dec=newDec();I(mode,'in{P}Dec').value='';
+  if(mode==='manual')$('manDecPassword').value='';
+  I(mode,'{p}DecBar').style.width='0%';I(mode,'{p}DecPct').textContent='0%';I(mode,'{p}DecStage').textContent=t('prog.waiting');I(mode,'{p}DecStatus').textContent=t('status.waitFile');
+  syncDec(mode);
+}
+const GAL_PAGE=24;
+function galleryCard(f,idx){
+  const kind=kindOf(f.type,f.name),tag=t(kind==='image'?'tag.image':kind==='video'?'tag.video':'tag.file');
+  const d=document.createElement('div');d.className='result-item';d.dataset.idx=idx;
+  d.innerHTML=`<div class="result-item-media">${thumbHTML(f,kind,f.name)}${kind==='video'?'<div class="result-item-play"></div>':''}<span class="result-item-type">${tag}</span></div><div class="result-item-body"><div class="result-item-info">${escapeHtml(f.name||('file-'+(idx+1)))}</div><div class="result-item-size">${formatBytes(f.size)}</div><div class="result-item-actions"><button data-download="${idx}" type="button">${t('btn.download')}</button></div></div>`;
+  return d;
+}
+function appendGallery(mode,to){
+  const st=S[mode].dec,grid=I(mode,'{p}DecGrid'),from=grid.children.length,end=Math.min(to,st.restored.length);
+  const frag=document.createDocumentFragment();
+  for(let i=from;i<end;i++)frag.appendChild(galleryCard(st.restored[i],i));
+  grid.appendChild(frag);observeThumbs(grid);
+}
+function setupSentinel(mode){const s=I(mode,'{p}DecSentinel');if(_sio){_sio.unobserve(s);_sio.observe(s);}}
+function renderGallery(mode){
+  const st=S[mode].dec,grid=I(mode,'{p}DecGrid');disposeMedia(grid);grid.innerHTML='';
+  st.shown=_sio?Math.max(st.shown||0,GAL_PAGE):st.restored.length;
+  appendGallery(mode,st.shown);setupSentinel(mode);
+}
+function loadMore(mode){
+  const st=S[mode].dec,grid=I(mode,'{p}DecGrid');
+  if(grid.children.length>=st.restored.length)return;
+  st.shown=grid.children.length+GAL_PAGE;appendGallery(mode,st.shown);setupSentinel(mode);
+}
+async function runDecrypt(mode){
+  const M=MODES[mode],st=S[mode].dec;
+  if(st.busy||!st.files.length)return;
+  const password=M.manual?$('manDecPassword').value:'';
+  if(M.manual&&password.length<PWD_MIN){toast(t('manual.passwordTooShort'));return;}
+  const bar=I(mode,'{p}DecBar'),pct=I(mode,'{p}DecPct'),stage=I(mode,'{p}DecStage'),status=I(mode,'{p}DecStatus');
+  const grid=I(mode,'{p}DecGrid');disposeMedia(grid);st.restored.forEach(disposeRec);st.restored=[];grid.innerHTML='';
+  st.busy=true;st.started=true;st.controller=new AbortController();syncDec(mode);
+  await lockScreen();
+  const totalBytes=st.files.reduce((a,f)=>a+f.size,0)||1,prog=makeProgress(bar,pct,stage,status,totalBytes,'');
+  let doneBytes=0,failures=[],cancelled=false;const out=[];
+  try{
+    for(let i=0;i<st.files.length;i++){
+      const f=st.files[i],label=st.files.length>1?`(${i+1}/${st.files.length})`:'';
+      try{
+        const res=await decryptCxw(f,{manual:M.manual,password,signal:st.controller.signal,onProgress:p=>prog.set((doneBytes+f.size*(p.stage==='keys'?0:p.done/p.total))/totalBytes,(label?label+' — ':'')+stageLabel(p.stage),doneBytes+f.size*(p.done/p.total),false)});
+        out.push(...res.files);
+      }catch(e){
+        if(e&&e.code==='aborted')throw e;
+        failures.push({name:f.name,err:e});console.error('decrypt failed',f.name,e);
+        if(e&&e.code==='wrongPassword')break; // same password for all: no point continuing
+      }
+      doneBytes+=f.size;await yieldToUI();
+    }
+    if(!out.length)throw failures[0]?failures[0].err:new CxwError('allFailed');
+    prog.set(1,t('prog.done'),totalBytes,true);
+    st.restored=out.map(f=>({name:f.name,type:f.type||mimeFromName(f.name),size:f.size,blob:f.blob,saved:false,url:null,thumb:null}));st.shown=0;
+    if(failures.length)toast(tf('toast.partialRestore',{n:out.length,f:failures.length})+' — '+errMsg(failures[0].err),6000);
+    else toast(`${t(mode==='auto'?'toast.autoRestored':'toast.manRestored')} (${out.length})`,3500);
+  }catch(e){
+    if(e&&e.code==='aborted'){cancelled=true;toast(t('toast.cancelled'),3000);}
+    else{console.error(e);status.textContent=t('toast.failed')+': '+errMsg(e);toast(errMsg(e),6000);}
+  }finally{unlockScreen();st.busy=false;st.controller=null;}
+  if(S[mode].dec!==st)return;
+  renderGallery(mode);syncDec(mode);
+}
+
+/* ═════════ viewer ═════════ */
+let viewer,vTrack,vName,vCounter,vDots,vSize,vTop,vBottom,vHint;
+let vItems=[],vIndex=0,vTimer=null,vCurrent=null,vPushed=false;
+const vDrag={on:false,axis:null,x0:0,y0:0,dx:0,dy:0};
+const isRtl=()=>document.documentElement.getAttribute('dir')==='rtl';
+const stopVideos=()=>vTrack.querySelectorAll('video').forEach(v=>{try{if(!v.paused)v.pause();}catch(_){}});
+function ensureUrl(item){if(!item.url)item.url=trackURL(URL.createObjectURL(item.blob));return item.url;}
+function fileCard(item){
+  const d=document.createElement('div');d.className='viewer-file';
+  const ext=(extOf(item.name,'').replace('.','')||'FILE').toUpperCase().slice(0,5);
+  d.innerHTML=`<div class="file-tile big">${escapeHtml(ext)}</div><div class="vf-name">${escapeHtml(item.name||'')}</div><div class="vf-hint">${t('viewer.noPreview')}</div>`;
+  return d;
+}
+function posterStub(item){
+  const w=document.createElement('div');w.className='vposter';
+  if(item.thumb){const i=document.createElement('img');i.src=item.thumb;i.className='viewer-media';i.draggable=false;w.appendChild(i);}
+  else{const f=document.createElement('div');f.className='file-tile big';f.textContent='VIDEO';w.appendChild(f);}
+  const p=document.createElement('div');p.className='vplay';w.appendChild(p);return w;
+}
+function fillSlide(s,item,active){
+  const kind=kindOf(item.type,item.name);
+  s.dataset.k=active?'a':'n';
+  if(kind==='video'){
+    /* only the visible video is real: it starts buffering immediately so a tap plays at once */
+    if(!active){s.appendChild(posterStub(item));return;}
+    const v=document.createElement('video');
+    v.className='viewer-media';v.controls=true;v.playsInline=true;v.preload='auto';
+    v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');
+    if(item.thumb)v.poster=item.thumb;
+    v.src=ensureUrl(item);
+    s.appendChild(v);
+    const sp=document.createElement('div');sp.className='vspin on';s.appendChild(sp);
+    const on=()=>sp.classList.add('on'),off=()=>sp.classList.remove('on');
+    ['loadstart','waiting','seeking'].forEach(ev=>v.addEventListener(ev,on));
+    ['canplay','playing','seeked','pause','error'].forEach(ev=>v.addEventListener(ev,off));
+    v.addEventListener('play',()=>vTrack.querySelectorAll('video').forEach(o=>{if(o!==v&&!o.paused)try{o.pause();}catch(_){}}));
+    v.addEventListener('error',()=>{s.innerHTML='';s.appendChild(fileCard(item));});
+  }else if(kind==='image'){
+    const img=document.createElement('img');img.decoding='async';img.alt=item.name||'';img.className='viewer-media';img.draggable=false;
+    img.addEventListener('error',()=>{s.innerHTML='';s.appendChild(fileCard(item));});
+    img.src=ensureUrl(item);s.appendChild(img);
+  }else s.appendChild(fileCard(item));
+}
+function emptySlide(s){s.querySelectorAll('video').forEach(v=>{try{v.pause();}catch(_){}v.removeAttribute('src');try{v.load();}catch(_){}});s.innerHTML='';delete s.dataset.k;}
+function syncSlides(){
+  Array.from(vTrack.children).forEach((s,i)=>{
+    const need=Math.abs(i-vIndex)<=1,key=i===vIndex?'a':'n';
+    if(need){
+      if(s.firstChild&&s.dataset.k!==key&&kindOf(vItems[i].type,vItems[i].name)==='video')emptySlide(s);
+      if(!s.firstChild)fillSlide(s,vItems[i],i===vIndex);
+    }else if(s.firstChild)emptySlide(s);
+  });
+}
+function buildViewer(){
+  vTrack.innerHTML='';vItems.forEach(()=>{const s=document.createElement('div');s.className='viewer-slide';vTrack.appendChild(s);});
+  vDots.innerHTML='';
+  if(vItems.length<=40)vItems.forEach((_,i)=>{const d=document.createElement('div');d.className='viewer-dot';d.addEventListener('click',()=>goTo(i));vDots.appendChild(d);});
+  syncSlides();moveTrack();
+}
+function moveTrack(dx,dy){
+  const base=isRtl()?vIndex*100:-vIndex*100;
+  vTrack.style.transform=(dx||dy)?`translate(calc(${base}% + ${dx||0}px), ${dy||0}px)`:`translateX(${base}%)`;
+}
+function updateViewerUI(){
+  const it=vItems[vIndex];if(!it)return;
+  vName.textContent=it.name||'—';vCounter.textContent=(vIndex+1)+' / '+vItems.length;vSize.textContent=formatBytes(it.size);vCurrent=it;
+  vDots.querySelectorAll('.viewer-dot').forEach((d,i)=>d.classList.toggle('active',i===vIndex));
+  const a=vDots.querySelector('.viewer-dot.active');if(a)try{a.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}catch(_){}
+}
+function showControls(){vTop.classList.remove('hidden');vBottom.classList.remove('hidden');clearTimeout(vTimer);vTimer=setTimeout(()=>{vTop.classList.add('hidden');vBottom.classList.add('hidden');},3200);}
+function showHint(x){vHint.textContent=x;vHint.classList.add('show');setTimeout(()=>vHint.classList.remove('show'),2200);}
+function goTo(i){if(i<0||i>=vItems.length){moveTrack();return;}stopVideos();vIndex=i;syncSlides();moveTrack();updateViewerUI();showControls();}
+function openViewer(items,index){
+  vItems=items;vIndex=index;buildViewer();updateViewerUI();viewer.classList.add('show');document.body.style.overflow='hidden';showControls();
+  if(items.length>1)showHint(t('viewer.swipe'));$('viewerClose').focus();
+  try{history.pushState({cxwv:1},'');vPushed=true;}catch(_){vPushed=false;}
+}
+function closeViewer(fromPop){
+  if(!viewer.classList.contains('show'))return;
+  stopVideos();viewer.classList.remove('show');viewer.style.opacity='';document.body.style.overflow='';clearTimeout(vTimer);
+  if(fromPop!==true&&vPushed){vPushed=false;try{history.back();}catch(_){}}else vPushed=false;
+  setTimeout(()=>{if(viewer.classList.contains('show'))return;Array.from(vTrack.children).forEach(emptySlide);vTrack.innerHTML='';vItems=[];vIndex=0;vCurrent=null;},350);
+}
+function openResultViewer(mode,index){const r=S[mode].dec.restored;if(r.length)openViewer(r,index);}
+
+/* ═════════ wipe ═════════ */
+function performFullCleanup(){
+  _tq.length=0;
+  ['auto','manual'].forEach(m=>{resetEnc(m);resetDec(m);});
+  if(viewer.classList.contains('show'))closeViewer();
+  clearKeyCaches();
+}
+function triggerCleanupFlow(){
+  clearTimeout(pullState.autoHideTimer);performFullCleanup();
+  const ct=$('cleanToast');ct.classList.add('show');setTimeout(()=>ct.classList.remove('show'),1600);setTimeout(resetRing,350);
+}
+const hasUnsaved=()=>['auto','manual'].some(m=>S[m].enc.busy||S[m].enc.results.some(r=>!r.saved));
+
+/* ═════════ password helpers ═════════ */
+function pwdScore(p){
+  if(!p)return -1;let s=0;if(p.length>=8)s++;if(p.length>=12)s++;if(p.length>=16)s++;
+  let c=0;[/[a-z]/,/[A-Z]/,/\d/,/[^A-Za-z0-9]/].forEach(r=>{if(r.test(p))c++;});if(c>=3)s++;
+  if(/^(.)\1+$/.test(p)||/^(0123|1234|abcd|password|qwerty|11111)/i.test(p))s=Math.min(s,1);
+  return Math.min(4,s);
+}
+function updateStrength(p){
+  const sc=pwdScore(p),m=$('manStrength');
+  m.dataset.lvl=sc<0?'0':String(sc<=0?1:sc);
+  $('manStrengthLabel').textContent=sc<0?'':t('strength.'+sc);
+}
+function bindEye(btnId,inputIds){
+  const b=$(btnId);
+  b.addEventListener('click',()=>{
+    const show=b.dataset.shown!=='1';b.dataset.shown=show?'1':'0';
+    inputIds.forEach(id=>$(id).type=show?'text':'password');
+    b.textContent=t(show?'manual.hide':'manual.show');
+  });
+}
+
+/* guide messages */
+let guideIdx=0,guideTimer=null;
+const startGuide=()=>{stopGuide();guideIdx=0;setGuide(0);guideTimer=setInterval(()=>{guideIdx=(guideIdx+1)%3;setGuide(guideIdx);},2000);};
+const stopGuide=()=>{if(guideTimer){clearInterval(guideTimer);guideTimer=null;}};
+const setGuide=i=>document.querySelectorAll('#guideMessages .hero-msg').forEach((m,k)=>m.classList.toggle('active',k===i));
+
+/* view helpers */
+function currentView(){
+  const group=document.querySelector('.tab-primary.active').dataset.group;
+  const sub=document.querySelector(`#group-${group} .sub-view.active`).id;
+  return{mode:group,kind:sub.endsWith('-enc')?'enc':'dec'};
+}
+function rerenderAll(){
+  ['auto','manual'].forEach(m=>{
+    if(S[m].enc.files.length)renderThumbs(m);
+    renderBundleList(m);syncEnc(m);
+    if(S[m].dec.restored.length)renderGallery(m);syncDec(m);
+  });
+  updateStrength($('manPassword').value);
+  ['btnEyeEnc','btnEyeDec'].forEach(id=>{const b=$(id);b.textContent=t(b.dataset.shown==='1'?'manual.hide':'manual.show');});
+}
+
+/* ═════════ init ═════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  pullIndicator=$('pullIndicator');ringProgress=$('ringProgress');
+  viewer=$('viewer');vTrack=$('viewerTrack');vName=$('viewerName');vCounter=$('viewerCounter');vDots=$('viewerDots');vSize=$('viewerSize');vTop=$('viewerTop');vBottom=$('viewerBottom');vHint=$('viewerHint');
+  pullIndicator.addEventListener('click',e=>{if(!pullState.ready)return;e.stopPropagation();triggerCleanupFlow();});
+  document.addEventListener('click',e=>{if(!pullState.ready)return;if(e.target.closest('.pull-indicator'))return;resetRing();});
+  document.addEventListener('touchstart',e=>{if(pullState.ready||!isAtBottom()||viewer.classList.contains('show'))return;pullState.active=true;pullState.startY=e.touches[0].clientY;pullState.currentProgress=0;pullState.triggered=false;},{passive:true});
+  document.addEventListener('touchmove',e=>{if(!pullState.active)return;const d=pullState.startY-e.touches[0].clientY;if(d>0&&isAtBottom()){e.preventDefault();const p=Math.min(1,d/PULL_THRESHOLD);pullState.currentProgress=p;scheduleRing(p);}},{passive:false});
+  document.addEventListener('touchend',()=>{if(!pullState.active)return;pullState.active=false;if(pullState.currentProgress>=1)onPullComplete();else resetRing();});
+  document.addEventListener('touchcancel',()=>{pullState.active=false;resetRing();});
+  document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='Backspace'){e.preventDefault();triggerCleanupFlow();}});
+  window.addEventListener('beforeunload',e=>{if(hasUnsaved()){e.preventDefault();e.returnValue='';}releaseAllTracked();});
+
+  try{localStorage.removeItem('cxw-theme');}catch(_){}
+  setTheme('light');
+  let sl=null;try{sl=localStorage.getItem('cxw-lang');}catch(_){}
+  setLang(sl==='ar'||sl==='en'?sl:((navigator.language||'ar').toLowerCase().startsWith('ar')?'ar':'en'));
+  $('themeToggle').addEventListener('click',()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
+  $('langToggle').addEventListener('click',()=>{const n=currentLang==='ar'?'en':'ar';setLang(n);try{localStorage.setItem('cxw-lang',n);}catch(_){}rerenderAll();});
+
+  /* tabs */
+  document.querySelectorAll('.tab-primary').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-primary').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});btn.classList.add('active');btn.setAttribute('aria-selected','true');
+    document.querySelectorAll('.view-group').forEach(g=>g.classList.remove('active'));$('group-'+btn.dataset.group).classList.add('active');
+    if(btn.dataset.group==='manual'&&document.querySelector('#group-manual .tab-secondary[data-role="encrypt"]').classList.contains('active'))startGuide();else stopGuide();
+  }));
+  document.querySelectorAll('.tabs-secondary').forEach(g=>g.querySelectorAll('.tab-secondary').forEach(btn=>btn.addEventListener('click',()=>{
+    g.querySelectorAll('.tab-secondary').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});btn.classList.add('active');btn.setAttribute('aria-selected','true');
+    const pg=g.closest('.view-group');pg.querySelectorAll('.sub-view').forEach(v=>v.classList.remove('active'));$(btn.dataset.sub).classList.add('active');
+    if(pg.id==='group-manual'){if(btn.dataset.sub==='man-enc')startGuide();else stopGuide();}
+  })));
+
+  /* viewer */
+  $('viewerClose').addEventListener('click',()=>closeViewer());
+  $('viewerClose').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();closeViewer();}});
+  $('viewerDownload').addEventListener('click',async()=>{
+    if(!vCurrent)return;const f=vCurrent;maybeWarnInApp();toast(t('toast.saving'),1200);
+    try{handleSaveResult(await smartSaveFile(f.blob,f.name||'file',f.type||'application/octet-stream','file',extOf(f.name,'.bin')),f.name);}catch(e){console.error(e);toast(t('toast.saveFailed'),4000);}
+  });
+  $('viewerStage').addEventListener('click',e=>{if(!e.target.closest('.viewer-media'))showControls();});
+  const stage=$('viewerStage');
+  window.addEventListener('popstate',()=>{if(viewer.classList.contains('show'))closeViewer(true);});
+  stage.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1){vDrag.on=false;return;}
+    const p=e.touches[0],tg=e.target;
+    if(tg&&tg.tagName==='VIDEO'){const r=tg.getBoundingClientRect();if(p.clientY>r.bottom-72){vDrag.on=false;return;}}
+    vDrag.on=true;vDrag.axis=null;vDrag.x0=p.clientX;vDrag.y0=p.clientY;vDrag.dx=0;vDrag.dy=0;
+  },{passive:true});
+  stage.addEventListener('touchmove',e=>{
+    if(!vDrag.on||e.touches.length!==1)return;
+    const p=e.touches[0];vDrag.dx=p.clientX-vDrag.x0;vDrag.dy=p.clientY-vDrag.y0;
+    if(!vDrag.axis){
+      if(Math.abs(vDrag.dx)<8&&Math.abs(vDrag.dy)<8)return;
+      vDrag.axis=Math.abs(vDrag.dx)>Math.abs(vDrag.dy)?'x':'y';vTrack.style.transition='none';
+    }
+    if(vDrag.axis==='x'){
+      let dx=vDrag.dx;const fwd=isRtl()?dx>0:dx<0;
+      if((fwd&&vIndex>=vItems.length-1)||(!fwd&&vIndex<=0))dx*=0.3;
+      moveTrack(dx,0);
+    }else if(vDrag.dy>0){
+      moveTrack(0,vDrag.dy);viewer.style.opacity=String(1-Math.min(0.6,vDrag.dy/400));
+    }
+  },{passive:true});
+  const endDrag=cancel=>{
+    if(!vDrag.on)return;vDrag.on=false;vTrack.style.transition='';viewer.style.opacity='';
+    const{dx,dy,axis}=vDrag;vDrag.axis=null;
+    if(!cancel&&axis==='x'&&Math.abs(dx)>60){const next=isRtl()?dx>0:dx<0;goTo(vIndex+(next?1:-1));}
+    else if(!cancel&&axis==='y'&&dy>120)closeViewer();
+    else{moveTrack();if(!axis&&!cancel)showControls();}
+  };
+  stage.addEventListener('touchend',()=>endDrag(false));
+  stage.addEventListener('touchcancel',()=>endDrag(true));
+  document.addEventListener('keydown',e=>{
+    if(!viewer.classList.contains('show'))return;
+    const rtl=document.documentElement.getAttribute('dir')==='rtl';
+    if(e.key==='Escape')closeViewer();
+    else if(e.key==='ArrowLeft')goTo(vIndex+(rtl?1:-1));
+    else if(e.key==='ArrowRight')goTo(vIndex+(rtl?-1:1));
+  });
+
+  /* per-mode wiring */
+  Object.keys(MODES).forEach(mode=>{
+    const M=MODES[mode];
+    I(mode,'btnPick{P}Enc').addEventListener('click',()=>I(mode,'in{P}Enc').click());
+    I(mode,'btnPick{P}EncAny').addEventListener('click',()=>I(mode,'in{P}EncAny').click());
+    ['in{P}Enc','in{P}EncAny'].forEach(tpl=>I(mode,tpl).addEventListener('change',e=>{const f=Array.from(e.target.files||[]);e.target.value='';addFiles(mode,f);}));
+    I(mode,'{p}Thumbs').addEventListener('click',ev=>{
+      const del=ev.target.closest('.del');if(!del)return;ev.stopPropagation();
+      const st=S[mode].enc;if(st.busy||st.results.length)return;const i=parseInt(del.dataset.i,10);
+      disposeRec(st.files[i]);st.files.splice(i,1);if(!st.files.length)st.expanded=false;renderThumbs(mode);syncEnc(mode);
+    });
+    I(mode,'{p}BundleSize').addEventListener('change',e=>{S[mode].enc.limit=parseInt(e.target.value,10);});
+    I(mode,'{p}Verify').addEventListener('change',e=>{S[mode].enc.verify=e.target.checked;});
+    I(mode,'btnCancel{P}Enc').addEventListener('click',()=>{const c=S[mode].enc.controller;if(c)c.abort();});
+    I(mode,'btnReset{P}Enc').addEventListener('click',()=>resetEnc(mode));
+    I(mode,'{p}BundleList').addEventListener('click',async ev=>{
+      const btn=ev.target.closest('.bundle-save');if(!btn)return;
+      const r=S[mode].enc.results[parseInt(btn.dataset.idx,10)];if(!r)return;
+      maybeWarnInApp();toast(t('toast.saving'),1200);
+      try{const res=await smartSaveFile(r.blob,r.name,'application/octet-stream','cxw','.cxw');handleSaveResult(res,r.name);
+        if(res&&res.ok){r.saved=true;btn.classList.add('saved');btn.textContent=t('bundle.saved');updateSavedState(mode);}}
+      catch(e){console.error(e);toast(t('toast.saveFailed'),4000);}
+    });
+    const saveBundles=async()=>{await saveAllItems(S[mode].enc.results,'bundles');renderBundleList(mode);updateSavedState(mode);};
+    I(mode,'btnFolder{P}').addEventListener('click',saveBundles);
+    I(mode,'btnSaveAll{P}').addEventListener('click',saveBundles);
+
+    /* decrypt */
+    I(mode,'btnPick{P}Dec').addEventListener('click',()=>I(mode,'in{P}Dec').click());
+    I(mode,'in{P}Dec').addEventListener('change',e=>{const f=Array.from(e.target.files||[]);e.target.value='';pickCxw(mode,f);});
+    I(mode,'btnRestore{P}').addEventListener('click',()=>runDecrypt(mode));
+    I(mode,'btnCancel{P}Dec').addEventListener('click',()=>{const c=S[mode].dec.controller;if(c)c.abort();});
+    I(mode,'btnWatchAll{P}').addEventListener('click',()=>openResultViewer(mode,0));
+    I(mode,'btnSaveAllRestored{P}').addEventListener('click',async()=>{await saveAllItems(S[mode].dec.restored,'files');});
+    I(mode,'btnReset{P}Dec').addEventListener('click',()=>resetDec(mode));
+    I(mode,'{p}DecGrid').addEventListener('click',async ev=>{
+      const dl=ev.target.closest('[data-download]');
+      if(dl){ev.stopPropagation();const f=S[mode].dec.restored[parseInt(dl.dataset.download,10)];if(!f)return;
+        maybeWarnInApp();toast(t('toast.saving'),1200);
+        try{const res=await smartSaveFile(f.blob,f.name||'file',f.type||'application/octet-stream','file',extOf(f.name,'.bin'));handleSaveResult(res,f.name);if(res&&res.ok)f.saved=true;}catch(e){console.error(e);toast(t('toast.saveFailed'),4000);}
+        return;}
+      const card=ev.target.closest('.result-item');if(card)openResultViewer(mode,parseInt(card.dataset.idx,10));
+    });
+  });
+
+  /* manual-only */
+  bindEye('btnEyeEnc',['manPassword','manPasswordConfirm']);bindEye('btnEyeDec',['manDecPassword']);
+  $('manPassword').addEventListener('input',e=>updateStrength(e.target.value));
+  $('btnCopyPwd').addEventListener('click',async()=>{
+    const p=$('manPwdDisplay').textContent;if(!p||p==='—')return;
+    try{await navigator.clipboard.writeText(p);toast(t('manual.copied'));}
+    catch(_){const ta=document.createElement('textarea');ta.value=p;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast(t('manual.copied'));}catch(__){toast(t('manual.copyFailed'));}ta.remove();}
+  });
+  $('btnStartAutoEnc').addEventListener('click',()=>runEncryption('auto'));
+  $('manPasswordConfirm').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const b=$('btnStartManEnc');if(b.style.display!=='none')b.click();}});
+  $('manDecPassword').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const b=$('btnRestoreMan');if(!b.disabled)b.click();}});
+  $('btnStartManEnc').addEventListener('click',async()=>{
+    const st=S.manual.enc;if(!st.files.length){toast(t('toast.pickFirst'));return;}
+    const p=$('manPassword').value,c=$('manPasswordConfirm').value;
+    if(p.length<PWD_MIN){toast(t('manual.passwordTooShort'));return;}
+    if(p.length>PWD_MAX){toast(t('manual.passwordTooLong'));return;}
+    if(p!==c){toast(t('manual.passwordMismatch'));return;}
+    st.password=p;$('manPwdDisplay').textContent=p;
+    await runEncryption('manual');
+    st.password=''; // keep only what's displayed for the user to copy
+  });
+
+  /* drag & drop (desktop) */
+  let dragDepth=0;const ov=$('dropOverlay');
+  const hasFiles=e=>e.dataTransfer&&Array.from(e.dataTransfer.types||[]).includes('Files');
+  window.addEventListener('dragenter',e=>{if(!hasFiles(e))return;e.preventDefault();dragDepth++;ov.classList.add('show');});
+  window.addEventListener('dragover',e=>{if(hasFiles(e))e.preventDefault();});
+  window.addEventListener('dragleave',e=>{if(!hasFiles(e))return;dragDepth=Math.max(0,dragDepth-1);if(!dragDepth)ov.classList.remove('show');});
+  window.addEventListener('drop',e=>{
+    if(!hasFiles(e))return;e.preventDefault();dragDepth=0;ov.classList.remove('show');
+    const files=Array.from(e.dataTransfer.files||[]),v=currentView();
+    if(v.kind==='enc')addFiles(v.mode,files);
+    else{const c=files.filter(f=>/\.cxw$/i.test(f.name));if(!c.length){toast(t('toast.dropWrong'));return;}pickCxw(v.mode,c);}
+  });
+
+  rerenderAll();
+});
+
+</script>
+</body>
+</html>
